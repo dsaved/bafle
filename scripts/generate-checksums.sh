@@ -8,7 +8,8 @@ set -u  # Fail on undefined variables
 set -o pipefail  # Catch errors in pipes
 
 # Configuration
-ARCHIVE_DIR="bootstrap-archives"
+# If ARCHIVE_DIR is not set, use current directory (for when run from bootstrap-archives/)
+ARCHIVE_DIR="${ARCHIVE_DIR:-.}"
 ARCHITECTURES=("arm64-v8a" "armeabi-v7a" "x86_64" "x86")
 
 # Color codes for output
