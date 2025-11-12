@@ -137,12 +137,21 @@ download_bootstrap() {
         return 1
     fi
     
-    # Rename to Android architecture naming
+    # Restructure to have usr directory (required by packaging script)
+    log_info "Restructuring bootstrap to usr directory format..."
     local android_dir="${DOWNLOAD_DIR}/${android_arch}"
     if [ -d "$android_dir" ]; then
         rm -rf "$android_dir"
     fi
-    mv "$extract_dir" "$android_dir"
+    
+    # Create android_dir with usr subdirectory
+    mkdir -p "${android_dir}/usr"
+    
+    # Move all extracted contents into usr directory
+    mv "$extract_dir"/* "${android_dir}/usr/" 2>/dev/null || true
+    
+    # Clean up empty extract directory
+    rmdir "$extract_dir" 2>/dev/null || true
     
     log_info "Successfully processed $android_arch"
     
