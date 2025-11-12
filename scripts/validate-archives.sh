@@ -13,12 +13,14 @@ set -o pipefail  # Exit on pipe failure
 ARCHIVE_DIR="bootstrap-archives"
 TEMP_EXTRACT_DIR="temp-validation"
 
-# Critical binaries that must be present
-CRITICAL_BINARIES=("bash" "git")
+# Critical binaries that must be present in base Termux bootstrap
+# Note: git, node, python are NOT in base bootstrap - they're installed via apt
+CRITICAL_BINARIES=("bash" "apt" "dpkg")
 # Alternative binaries (at least one from each group must exist)
-declare -A ALTERNATIVE_BINARIES=(
-    ["node"]="node nodejs"
-    ["python"]="python3 python"
+# Using arrays instead of associative arrays for bash 3.2 compatibility
+ALTERNATIVE_BINARIES=(
+    "tar:tar"
+    "gzip:gzip gunzip"
 )
 
 # Color codes for output
@@ -99,8 +101,9 @@ validate_archive() {
     done
     
     # Check alternative binaries (at least one from each group)
-    for group_name in "${!ALTERNATIVE_BINARIES[@]}"; do
-        local alternatives="${ALTERNATIVE_BINARIES[$group_name]}"
+    for mapping in "${ALTERNATIVE_BINARIES[@]}"; do
+        local group_name="${mapping%%:*}"
+        local alternatives="${mapping##*:}"
         local found=false
         
         for binary in $alternatives; do
@@ -136,8 +139,8 @@ validate_archive() {
     done
     
     # Check alternative binaries that exist
-    for group_name in "${!ALTERNATIVE_BINARIES[@]}"; do
-        local alternatives="${ALTERNATIVE_BINARIES[$group_name]}"
+    for mapping in "${ALTERNATIVE_BINARIES[@]}"; do
+        local alternatives="${mapping##*:}"
         for binary in $alternatives; do
             local binary_path="${extract_dir}/usr/bin/${binary}"
             if [ -f "$binary_path" ] && [ ! -x "$binary_path" ]; then
