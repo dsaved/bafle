@@ -1,29 +1,29 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "last_updated": "2025-11-12",
   "architectures": {
     "arm64-v8a": {
-      "url": "https://github.com/dsaved/bafle/releases/download/v1.0.0/bootstrap-arm64-v8a-1.0.0.tar.gz",
-      "size": 28637683,
-      "checksum": "sha256:eead336def38dbd63514f0ad3e2793065e2df08d3f12a792316d8aea827ca042",
+      "url": "https://github.com/dsaved/bafle/releases/download/v1.0.1/bootstrap-arm64-v8a-1.0.1.tar.gz",
+      "size": 28637665,
+      "checksum": "sha256:b2b7efb813c162256002e57149359061cc5575e3f91e746df89bb501df808893",
       "min_android_version": 21
     },
     "armeabi-v7a": {
-      "url": "https://github.com/dsaved/bafle/releases/download/v1.0.0/bootstrap-armeabi-v7a-1.0.0.tar.gz",
-      "size": 25480237,
-      "checksum": "sha256:dcd2b3a1ee9f33c0ecde7ad93fe16e556c54063ee65f4e21f84eedabdabaf4f3",
+      "url": "https://github.com/dsaved/bafle/releases/download/v1.0.1/bootstrap-armeabi-v7a-1.0.1.tar.gz",
+      "size": 25480226,
+      "checksum": "sha256:9e3a9687d2a1f49d32be1e247ee5ff1cf654896985082eab985655067c96dab3",
       "min_android_version": 21
     },
     "x86_64": {
-      "url": "https://github.com/dsaved/bafle/releases/download/v1.0.0/bootstrap-x86_64-1.0.0.tar.gz",
-      "size": 28509118,
-      "checksum": "sha256:09151139f8101c9c6d6a7e7ecf9eb605af6dc8506925b5e8accba0ea17c2258c",
+      "url": "https://github.com/dsaved/bafle/releases/download/v1.0.1/bootstrap-x86_64-1.0.1.tar.gz",
+      "size": 28509121,
+      "checksum": "sha256:1567a342c7fbd871b2668d3f3ae511edf02a2e92b95236be848f14f14f2e024d",
       "min_android_version": 21
     },
     "x86": {
-      "url": "https://github.com/dsaved/bafle/releases/download/v1.0.0/bootstrap-x86-1.0.0.tar.gz",
-      "size": 27801316,
-      "checksum": "sha256:5345e36fd547577aecd84b2a57caa8fc14236110a15ed544e2f812d7e8be0417",
+      "url": "https://github.com/dsaved/bafle/releases/download/v1.0.1/bootstrap-x86-1.0.1.tar.gz",
+      "size": 27801312,
+      "checksum": "sha256:df726d7fbb7dddc639ff13047ea904f7a0194e9a41ed7a17951369e253bd2c30",
       "min_android_version": 21
     }
   }
