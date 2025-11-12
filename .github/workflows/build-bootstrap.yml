@@ -386,7 +386,7 @@ jobs:
           echo ""
           echo "Creating GitHub release with tag v$VERSION..."
           
-          # Create the release with all assets
+          # Create the release with all assets including manifest
           if ! gh release create "v$VERSION" \
             --title "Bootstrap v$VERSION" \
             --notes-file release_notes.md \
@@ -395,7 +395,8 @@ jobs:
             bootstrap-archives/bootstrap-armeabi-v7a-$VERSION.tar.gz \
             bootstrap-archives/bootstrap-x86_64-$VERSION.tar.gz \
             bootstrap-archives/bootstrap-x86-$VERSION.tar.gz \
-            checksums.txt; then
+            checksums.txt \
+            bootstrap-manifest.json; then
             echo ""
             echo "❌ Error: Failed to create GitHub release"
             echo "This could be due to:"
@@ -428,75 +429,60 @@ jobs:
           echo "  ✓ bootstrap-x86_64-$VERSION.tar.gz"
           echo "  ✓ bootstrap-x86-$VERSION.tar.gz"
           echo "  ✓ checksums.txt"
+          echo "  ✓ bootstrap-manifest.json"
           echo ""
           echo "🔗 Release URL: $RELEASE_URL"
+          echo ""
+          echo "📋 Manifest URLs:"
+          echo "  Versioned: https://github.com/$REPO_NAME/releases/download/v$VERSION/bootstrap-manifest.json"
+          echo "  Latest: https://github.com/$REPO_NAME/releases/latest/download/bootstrap-manifest.json"
       
-      - name: Upload manifest to release
+      - name: Verify manifest accessibility
         run: |
           echo ""
-          echo "Uploading bootstrap-manifest.json to release v$VERSION..."
+          echo "Verifying manifest URLs are accessible..."
           
-          # Verify manifest file exists
-          if [ ! -f "bootstrap-manifest.json" ]; then
-            echo "❌ Error: bootstrap-manifest.json not found"
-            echo "The manifest file should exist in the repository root"
-            exit 1
-          fi
+          # Versioned URL
+          VERSIONED_URL="https://github.com/$REPO_NAME/releases/download/v$VERSION/bootstrap-manifest.json"
+          echo "Testing versioned URL: $VERSIONED_URL"
           
-          # Upload the manifest file to the release
-          if ! gh release upload "v$VERSION" bootstrap-manifest.json --clobber; then
-            echo ""
-            echo "❌ Error: Failed to upload bootstrap-manifest.json to release"
-            echo "This could be due to:"
-            echo "  - Release v$VERSION not found"
-            echo "  - Insufficient permissions on GITHUB_TOKEN"
-            echo "  - Network connectivity issues"
-            echo "  - File upload size limits"
-            echo ""
-            echo "Please verify the release exists and check permissions"
-            exit 1
-          fi
-          
-          echo "✅ Manifest uploaded successfully"
-          echo ""
-          
-          # Verify manifest URL is accessible
-          echo "Verifying manifest URL accessibility..."
-          MANIFEST_URL="https://github.com/$REPO_NAME/releases/download/v$VERSION/bootstrap-manifest.json"
-          echo "Manifest URL: $MANIFEST_URL"
-          
-          # Wait a moment for GitHub to process the upload
+          # Wait for GitHub to process the release
           echo "Waiting for GitHub CDN to propagate..."
           sleep 5
           
-          # Verify the manifest is accessible
-          echo "Testing manifest URL..."
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -L "$MANIFEST_URL")
-          
+          # Test versioned URL
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -L "$VERSIONED_URL")
           if [ "$HTTP_STATUS" = "200" ]; then
-            echo "✅ Manifest URL is accessible (HTTP $HTTP_STATUS)"
-            
-            # Download and verify it's valid JSON
-            echo "Validating downloaded manifest..."
-            if curl -s -L "$MANIFEST_URL" | jq empty 2>/dev/null; then
-              echo "✅ Downloaded manifest is valid JSON"
-            else
-              echo "⚠️  Warning: Downloaded manifest may not be valid JSON"
-              echo "This could be a temporary CDN issue"
+            echo "✅ Versioned URL is accessible (HTTP $HTTP_STATUS)"
+            if curl -s -L "$VERSIONED_URL" | jq empty 2>/dev/null; then
+              echo "✅ Versioned manifest is valid JSON"
             fi
           else
-            echo "⚠️  Warning: Manifest URL returned HTTP $HTTP_STATUS"
-            echo "The manifest was uploaded but may not be immediately accessible"
-            echo "This is often due to GitHub CDN propagation delay (can take 1-2 minutes)"
-            echo ""
-            echo "Please verify manually after a few minutes: $MANIFEST_URL"
-            echo ""
-            echo "Note: This is not a critical error - the manifest is uploaded"
+            echo "⚠️  Warning: Versioned URL returned HTTP $HTTP_STATUS"
           fi
           
           echo ""
-          echo "📄 Additional asset uploaded to release:"
-          echo "  ✓ bootstrap-manifest.json"
+          
+          # Test latest URL
+          LATEST_URL="https://github.com/$REPO_NAME/releases/latest/download/bootstrap-manifest.json"
+          echo "Testing latest URL: $LATEST_URL"
+          
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -L "$LATEST_URL")
+          if [ "$HTTP_STATUS" = "200" ]; then
+            echo "✅ Latest URL is accessible (HTTP $HTTP_STATUS)"
+            if curl -s -L "$LATEST_URL" | jq empty 2>/dev/null; then
+              echo "✅ Latest manifest is valid JSON"
+            fi
+          else
+            echo "⚠️  Warning: Latest URL returned HTTP $HTTP_STATUS"
+            echo "This is often due to GitHub CDN propagation delay (can take 1-2 minutes)"
+            echo "The manifest is uploaded and will be accessible shortly"
+          fi
+          
+          echo ""
+          echo "📋 Manifest is now available at:"
+          echo "  Versioned: $VERSIONED_URL"
+          echo "  Latest: $LATEST_URL"
       
       - name: Workflow Summary
         if: always()
