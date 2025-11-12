@@ -1,0 +1,20 @@
+# Kiro IDE files
+.kiro/
+
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Build outputs
+bootstrap-downloads/
+bootstrap-archives/
+checksums.txt
+checksums.json
+release_notes.md
+temp-validation/
+
+# Test files
+test-workflow.sh
