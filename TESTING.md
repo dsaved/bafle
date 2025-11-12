@@ -197,29 +197,6 @@ The workflow is ready for production use:
    - Upload all assets
    - Commit manifest changes
 
-### Accessing Bootstrap Files
-
-After the workflow completes, bootstrap files are available via:
-
-**Latest Manifest** (recommended for apps):
-```
-https://github.com/dsaved/bafle/releases/latest/download/bootstrap-manifest.json
-```
-
-**Latest Bootstrap Archives**:
-```
-https://github.com/dsaved/bafle/releases/latest/download/bootstrap-arm64-v8a-{version}.tar.gz
-https://github.com/dsaved/bafle/releases/latest/download/bootstrap-armeabi-v7a-{version}.tar.gz
-https://github.com/dsaved/bafle/releases/latest/download/bootstrap-x86_64-{version}.tar.gz
-https://github.com/dsaved/bafle/releases/latest/download/bootstrap-x86-{version}.tar.gz
-```
-
-**Benefits**:
-- Apps always get the latest bootstrap version
-- No app updates needed when releasing new bootstrap versions
-- Users automatically receive updates
-- Specific versions remain accessible for rollback if needed
-
 ### Cleanup
 
 To clean up test artifacts:
