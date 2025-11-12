@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Bootstrap Download Script
 # Downloads Termux bootstrap packages for all supported architectures
@@ -15,12 +15,27 @@ MAX_RETRIES=3
 INITIAL_BACKOFF=2
 
 # Architecture mapping: Termux arch -> Android arch
-declare -A ARCH_MAP=(
-    ["aarch64"]="arm64-v8a"
-    ["arm"]="armeabi-v7a"
-    ["x86_64"]="x86_64"
-    ["i686"]="x86"
+# Format: "termux_arch:android_arch"
+ARCHITECTURES=(
+    "aarch64:arm64-v8a"
+    "arm:armeabi-v7a"
+    "x86_64:x86_64"
+    "i686:x86"
 )
+
+# Helper function to get Android arch from Termux arch
+get_android_arch() {
+    local termux_arch="$1"
+    for mapping in "${ARCHITECTURES[@]}"; do
+        local t_arch="${mapping%%:*}"
+        local a_arch="${mapping##*:}"
+        if [ "$t_arch" = "$termux_arch" ]; then
+            echo "$a_arch"
+            return 0
+        fi
+    done
+    return 1
+}
 
 # Color codes for output
 RED='\033[0;31m'
@@ -43,7 +58,7 @@ log_error() {
 
 # Get the latest Termux bootstrap release tag
 get_latest_bootstrap_tag() {
-    log_info "Fetching latest Termux bootstrap release..."
+    log_info "Fetching latest Termux bootstrap release..." >&2
     
     local tag
     tag=$(curl -s "https://api.github.com/repos/${TERMUX_REPO}/releases" | \
@@ -52,11 +67,11 @@ get_latest_bootstrap_tag() {
         cut -d'"' -f4)
     
     if [ -z "$tag" ]; then
-        log_error "Failed to fetch latest bootstrap tag"
+        log_error "Failed to fetch latest bootstrap tag" >&2
         return 1
     fi
     
-    log_info "Latest bootstrap tag: $tag"
+    log_info "Latest bootstrap tag: $tag" >&2
     echo "$tag"
 }
 
@@ -91,8 +106,14 @@ download_with_retry() {
 # Download and extract bootstrap for a specific architecture
 download_bootstrap() {
     local termux_arch="$1"
-    local android_arch="${ARCH_MAP[$termux_arch]}"
     local bootstrap_tag="$2"
+    local android_arch
+    
+    android_arch=$(get_android_arch "$termux_arch")
+    if [ $? -ne 0 ]; then
+        log_error "Unknown architecture: $termux_arch"
+        return 1
+    fi
     
     log_info "Processing architecture: $termux_arch -> $android_arch"
     
@@ -148,7 +169,8 @@ main() {
     # Download bootstraps for all architectures
     local failed_archs=()
     
-    for termux_arch in "${!ARCH_MAP[@]}"; do
+    for mapping in "${ARCHITECTURES[@]}"; do
+        local termux_arch="${mapping%%:*}"
         if ! download_bootstrap "$termux_arch" "$bootstrap_tag"; then
             failed_archs+=("$termux_arch")
         fi
@@ -162,14 +184,17 @@ main() {
     
     if [ ${#failed_archs[@]} -eq 0 ]; then
         log_info "All architectures downloaded successfully:"
-        for termux_arch in "${!ARCH_MAP[@]}"; do
-            echo "  ✓ ${ARCH_MAP[$termux_arch]}"
+        for mapping in "${ARCHITECTURES[@]}"; do
+            local android_arch="${mapping##*:}"
+            echo "  ✓ $android_arch"
         done
         exit 0
     else
         log_error "Failed to download the following architectures:"
         for arch in "${failed_archs[@]}"; do
-            echo "  ✗ ${ARCH_MAP[$arch]}"
+            local android_arch
+            android_arch=$(get_android_arch "$arch")
+            echo "  ✗ $android_arch"
         done
         exit 1
     fi
