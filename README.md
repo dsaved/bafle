@@ -72,9 +72,34 @@ Each workflow run produces:
 - Updated bootstrap-manifest.json
 - GitHub release with all assets
 
+### Accessing Bootstrap Files
+
+All bootstrap files are available through GitHub releases:
+
+**Latest Manifest** (recommended):
+```
+https://github.com/dsaved/bafle/releases/latest/download/bootstrap-manifest.json
+```
+
+**Specific Version Manifest**:
+```
+https://github.com/dsaved/bafle/releases/download/v1.0.0/bootstrap-manifest.json
+```
+
+**Bootstrap Archives**:
+```
+https://github.com/dsaved/bafle/releases/download/v1.0.0/bootstrap-{arch}-1.0.0.tar.gz
+```
+
+Using the `/latest/` URL ensures your app always fetches the most recent bootstrap version without requiring app updates.
+
 ## Bootstrap Manifest
 
-The manifest file provides metadata for each architecture:
+The manifest file provides metadata for each architecture and is available via a stable "latest" URL:
+
+**Manifest URL**: `https://github.com/dsaved/bafle/releases/latest/download/bootstrap-manifest.json`
+
+This URL always points to the most recent bootstrap version, enabling automatic updates without app changes.
 
 ```json
 {
@@ -89,6 +114,21 @@ The manifest file provides metadata for each architecture:
     }
   }
 }
+```
+
+### Using the Manifest in Your App
+
+```kotlin
+// Fetch the latest bootstrap manifest
+val manifestUrl = "https://github.com/dsaved/bafle/releases/latest/download/bootstrap-manifest.json"
+val manifest = fetchJson(manifestUrl)
+
+// Get bootstrap for device architecture
+val arch = getDeviceArchitecture() // e.g., "arm64-v8a"
+val bootstrapInfo = manifest.architectures[arch]
+
+// Download and verify bootstrap
+downloadFile(bootstrapInfo.url, bootstrapInfo.checksum)
 ```
 
 ## Requirements
@@ -126,6 +166,26 @@ All scripts implement comprehensive error handling:
 7. Commit and push manifest changes
 8. Create GitHub release with all assets
 9. Upload manifest to release
+
+## Automatic Updates
+
+The workflow is designed to support automatic bootstrap updates:
+
+### Benefits of Using `/latest/` URL
+
+- **No App Updates Required**: When you release a new bootstrap version, apps using the `/latest/` URL automatically get the update
+- **Seamless Updates**: Users receive new bootstrap versions without reinstalling the app
+- **Version Tracking**: The manifest includes version and last_updated fields for tracking
+- **Backward Compatible**: Old versions remain accessible via specific version URLs
+
+### Update Flow
+
+1. Trigger workflow with new version (e.g., 1.1.0)
+2. Workflow builds and publishes new release
+3. GitHub automatically updates `/latest/` to point to new release
+4. Apps fetch manifest from `/latest/` URL
+5. Apps detect new version and download updated bootstrap
+6. Users get latest tools and packages automatically
 
 ## Testing
 
