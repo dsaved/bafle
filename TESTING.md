@@ -123,6 +123,36 @@ usr/
 └── SYMLINKS.txt  (symlink definitions)
 ```
 
+**Important**: The structure must have `usr/` at the root level, NOT `usr/usr/`. A nested structure will cause "Function not implemented" errors in PRoot.
+
+### ELF Interpreter Requirements
+
+Termux binaries are compiled for Android and reference the Android system linker as their ELF interpreter:
+
+**64-bit architectures** (arm64-v8a, x86_64):
+```bash
+$ readelf -l usr/bin/bash | grep interpreter
+[Requesting program interpreter: /system/bin/linker64]
+```
+
+**32-bit architectures** (armeabi-v7a, x86):
+```bash
+$ readelf -l usr/bin/bash | grep interpreter
+[Requesting program interpreter: /system/bin/linker]
+```
+
+This is critical for PRoot compatibility. The binaries expect to find the Android system linker at these paths. If the linker is not accessible, binaries will fail with "Function not implemented" errors.
+
+### Structure Validation Tests
+
+The test suite now includes comprehensive structure validation:
+
+1. **Correct usr/ structure**: Verifies `usr/bin/bash` path exists
+2. **No nested usr/usr/**: Ensures no incorrect nested directories
+3. **Required directories**: Checks for `usr/lib/` and other essential directories
+4. **ELF interpreter validation**: Verifies binaries reference Android linker
+5. **Symlink preservation**: Ensures symlinks are maintained in archives
+
 ### Generated Assets
 
 Each workflow run produces:
@@ -196,6 +226,62 @@ The workflow is ready for production use:
    - Create GitHub release
    - Upload all assets
    - Commit manifest changes
+
+### Common Issues and Solutions
+
+#### Issue: "Function not implemented" in PRoot
+
+**Cause**: Incorrect directory structure (nested usr/usr/) or missing Android linker.
+
+**Diagnosis**:
+```bash
+# Check archive structure
+tar -tzf bootstrap-arm64-v8a-1.0.0.tar.gz | head -20
+
+# Should see: usr/bin/bash
+# Should NOT see: usr/usr/bin/bash
+```
+
+**Solution**: Regenerate bootstrap with fixed scripts that preserve original structure.
+
+#### Issue: Nested usr/usr/ Structure
+
+**Cause**: Download script incorrectly restructured the bootstrap by moving all contents into a new usr/ directory.
+
+**Diagnosis**:
+```bash
+# Check for nested structure
+tar -tzf bootstrap-arm64-v8a-1.0.0.tar.gz | grep "^usr/usr/"
+
+# Should return no results
+```
+
+**Solution**: The download script has been fixed to preserve the original Termux structure without restructuring.
+
+#### Issue: Missing ELF Interpreter
+
+**Cause**: Binaries reference `/system/bin/linker64` which may not be accessible in PRoot.
+
+**Diagnosis**:
+```bash
+# Extract and check interpreter
+tar -xzf bootstrap-arm64-v8a-1.0.0.tar.gz
+readelf -l usr/bin/bash | grep interpreter
+```
+
+**Solution**: Ensure PRoot environment has access to Android system directories, or the bootstrap includes the necessary linker.
+
+#### Issue: Validation Script Fails
+
+**Cause**: Archive structure doesn't match expected layout.
+
+**Diagnosis**:
+```bash
+# Run validation with verbose output
+VERSION=1.0.0 ./scripts/validate-archives.sh
+```
+
+**Solution**: Check validation output for specific errors and regenerate affected archives.
 
 ### Cleanup
 

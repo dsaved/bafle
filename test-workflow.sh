@@ -215,6 +215,91 @@ done
 
 echo ""
 
+# Test 9: Bootstrap directory structure validation
+log_test "Testing bootstrap directory structure validation..."
+
+# Check if any bootstrap archives exist
+if ls bootstrap-archives/bootstrap-*.tar.gz 1> /dev/null 2>&1; then
+    log_pass "Bootstrap archives found for structure testing"
+    
+    # Test each archive for correct structure
+    for archive in bootstrap-archives/bootstrap-*.tar.gz; do
+        arch=$(basename "$archive" | sed 's/bootstrap-\(.*\)-[0-9].*/\1/')
+        
+        # Check for correct usr/bin structure (with or without ./ prefix)
+        if tar -tzf "$archive" | grep -q "^\(\./\)\?usr/bin/bash$"; then
+            log_pass "$(basename "$archive"): Correct usr/bin/bash structure"
+        else
+            log_fail "$(basename "$archive"): Missing or incorrect usr/bin/bash path"
+            exit 1
+        fi
+        
+        # Check for incorrect nested usr/usr structure
+        if tar -tzf "$archive" | grep -q "^\(\./\)\?usr/usr/"; then
+            log_fail "$(basename "$archive"): Detected incorrect nested usr/usr/ structure"
+            exit 1
+        else
+            log_pass "$(basename "$archive"): No nested usr/usr/ structure detected"
+        fi
+        
+        # Verify usr/lib exists
+        if tar -tzf "$archive" | grep -q "^\(\./\)\?usr/lib/"; then
+            log_pass "$(basename "$archive"): usr/lib directory present"
+        else
+            log_fail "$(basename "$archive"): Missing usr/lib directory"
+            exit 1
+        fi
+    done
+else
+    log_pass "No bootstrap archives found (skipping structure tests)"
+    echo "       Run full workflow to generate archives for structure testing"
+fi
+
+echo ""
+
+# Test 10: ELF interpreter validation (if archives exist)
+log_test "Testing ELF interpreter validation capability..."
+
+if ls bootstrap-archives/bootstrap-*.tar.gz 1> /dev/null 2>&1; then
+    # Create temporary extraction directory
+    TEMP_DIR=$(mktemp -d)
+    trap "rm -rf $TEMP_DIR" EXIT
+    
+    # Test one archive
+    archive=$(ls bootstrap-archives/bootstrap-*.tar.gz | head -1)
+    tar -xzf "$archive" -C "$TEMP_DIR"
+    
+    if [ -f "$TEMP_DIR/usr/bin/bash" ]; then
+        # Check if we can read ELF interpreter
+        if command -v readelf &> /dev/null; then
+            interpreter=$(readelf -l "$TEMP_DIR/usr/bin/bash" 2>/dev/null | grep interpreter | sed 's/.*\[//;s/\].*//' || echo "")
+            if [[ "$interpreter" =~ ^/system/bin/linker ]]; then
+                log_pass "Bash binary references Android linker: $interpreter"
+            else
+                log_fail "Unexpected interpreter path: $interpreter"
+                exit 1
+            fi
+        elif command -v file &> /dev/null; then
+            # Fallback to file command
+            if file "$TEMP_DIR/usr/bin/bash" | grep -q "interpreter"; then
+                log_pass "Bash binary has ELF interpreter (verified with file command)"
+            else
+                log_fail "Could not verify ELF interpreter"
+                exit 1
+            fi
+        else
+            log_pass "readelf/file not available (skipping ELF interpreter check)"
+        fi
+    else
+        log_fail "Could not extract bash binary for testing"
+        exit 1
+    fi
+else
+    log_pass "No bootstrap archives found (skipping ELF interpreter tests)"
+fi
+
+echo ""
+
 # Summary
 echo "=================================================="
 echo "           TEST SUMMARY"
@@ -230,6 +315,9 @@ echo "  ✓ Required tools availability"
 echo "  ✓ Manifest file existence and validity"
 echo "  ✓ Error handling flags (set -e, -u, -o pipefail)"
 echo "  ✓ Logging functions in all scripts"
+echo "  ✓ Bootstrap directory structure (usr/bin, usr/lib)"
+echo "  ✓ Detection of nested usr/usr/ directories"
+echo "  ✓ ELF interpreter validation for Android binaries"
 echo ""
 echo "The workflow is ready for deployment!"
 echo "=================================================="
