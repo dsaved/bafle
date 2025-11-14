@@ -47,6 +47,36 @@ validate_version() {
     return 0
 }
 
+# Validate bootstrap directory structure
+validate_structure() {
+    local bootstrap_dir="$1"
+    local arch="$2"
+    
+    log_info "Validating directory structure for $arch..."
+    
+    # Check if usr directory exists
+    if [ ! -d "${bootstrap_dir}/usr" ]; then
+        log_error "usr directory not found in $bootstrap_dir"
+        return 1
+    fi
+    
+    # Check for incorrect nested usr/usr/ structure
+    if [ -d "${bootstrap_dir}/usr/usr" ]; then
+        log_error "Incorrect nested usr/usr/ structure detected in $arch"
+        log_error "This indicates the bootstrap was incorrectly restructured"
+        return 1
+    fi
+    
+    # Verify critical directories exist
+    if [ ! -d "${bootstrap_dir}/usr/bin" ]; then
+        log_error "usr/bin directory not found in $arch bootstrap"
+        return 1
+    fi
+    
+    log_info "Directory structure validation passed for $arch"
+    return 0
+}
+
 # Set correct permissions on bootstrap directories
 set_permissions() {
     local bootstrap_dir="$1"
@@ -56,16 +86,26 @@ set_permissions() {
     
     # Set executable permissions on usr/bin
     if [ -d "${bootstrap_dir}/usr/bin" ]; then
+        local bin_count=$(ls -1 "${bootstrap_dir}/usr/bin" 2>/dev/null | wc -l | tr -d ' ')
+        log_info "Setting executable permissions on $bin_count files in usr/bin/"
         chmod +x "${bootstrap_dir}/usr/bin"/* 2>/dev/null || true
-        log_info "Set executable permissions on usr/bin"
-    else
-        log_warn "usr/bin directory not found in $arch bootstrap"
+        log_info "✓ Executable permissions set on usr/bin"
     fi
     
     # Set executable permissions on usr/libexec (if exists)
     if [ -d "${bootstrap_dir}/usr/libexec" ]; then
-        chmod +x "${bootstrap_dir}/usr/libexec"/* 2>/dev/null || true
-        log_info "Set executable permissions on usr/libexec"
+        local libexec_count=$(find "${bootstrap_dir}/usr/libexec" -type f 2>/dev/null | wc -l | tr -d ' ')
+        log_info "Setting executable permissions on $libexec_count files in usr/libexec/"
+        find "${bootstrap_dir}/usr/libexec" -type f -exec chmod +x {} \; 2>/dev/null || true
+        log_info "✓ Executable permissions set on usr/libexec"
+    fi
+    
+    # Set executable permissions on bin (if exists at root level)
+    if [ -d "${bootstrap_dir}/bin" ]; then
+        local root_bin_count=$(ls -1 "${bootstrap_dir}/bin" 2>/dev/null | wc -l | tr -d ' ')
+        log_info "Setting executable permissions on $root_bin_count files in bin/"
+        chmod +x "${bootstrap_dir}/bin"/* 2>/dev/null || true
+        log_info "✓ Executable permissions set on bin"
     fi
     
     return 0
@@ -87,9 +127,9 @@ create_archive() {
         return 1
     fi
     
-    # Check if usr directory exists
-    if [ ! -d "${bootstrap_dir}/usr" ]; then
-        log_error "usr directory not found in $bootstrap_dir"
+    # Validate directory structure
+    if ! validate_structure "$bootstrap_dir" "$arch"; then
+        log_error "Directory structure validation failed for $arch"
         return 1
     fi
     
@@ -97,6 +137,45 @@ create_archive() {
     if ! set_permissions "$bootstrap_dir" "$arch"; then
         log_error "Failed to set permissions for $arch"
         return 1
+    fi
+    
+    # Log the contents being archived for debugging
+    log_info "Archive contents preview for $arch:"
+    log_info "Root level directories and files:"
+    ls -1 "$bootstrap_dir" | while read -r item; do
+        if [ -d "${bootstrap_dir}/${item}" ]; then
+            echo "  📁 $item/"
+        else
+            echo "  📄 $item"
+        fi
+    done
+    
+    # Show usr/ subdirectories if it exists
+    if [ -d "${bootstrap_dir}/usr" ]; then
+        log_info "Contents of usr/ directory:"
+        ls -1 "${bootstrap_dir}/usr" | head -15 | while read -r item; do
+            if [ -d "${bootstrap_dir}/usr/${item}" ]; then
+                echo "  📁 usr/$item/"
+            else
+                echo "  📄 usr/$item"
+            fi
+        done
+        
+        # Count binaries in usr/bin
+        if [ -d "${bootstrap_dir}/usr/bin" ]; then
+            local bin_count=$(ls -1 "${bootstrap_dir}/usr/bin" | wc -l | tr -d ' ')
+            log_info "Total binaries in usr/bin/: $bin_count"
+            log_info "Sample binaries (first 10):"
+            ls -1 "${bootstrap_dir}/usr/bin" | head -10 | while read -r bin; do
+                echo "    - $bin"
+            done
+        fi
+        
+        # Count libraries in usr/lib
+        if [ -d "${bootstrap_dir}/usr/lib" ]; then
+            local lib_count=$(ls -1 "${bootstrap_dir}/usr/lib" | wc -l | tr -d ' ')
+            log_info "Total items in usr/lib/: $lib_count"
+        fi
     fi
     
     # Create archive with specific options:
@@ -107,7 +186,10 @@ create_archive() {
     # --group=0: set group to root (GID 0)
     # --numeric-owner: use numeric UIDs/GIDs instead of names
     # -C: change to directory before archiving
+    # .: archive entire directory contents (not just usr/)
     # -9: maximum compression level (passed via GZIP env var)
+    log_info "Creating archive with command:"
+    log_info "  GZIP=-9 tar -czf $archive_path --owner=0 --group=0 --numeric-owner -C $bootstrap_dir ."
     log_info "Compressing $arch bootstrap (this may take a moment)..."
     
     if ! GZIP=-9 tar -czf "$archive_path" \
@@ -115,10 +197,22 @@ create_archive() {
         --group=0 \
         --numeric-owner \
         -C "$bootstrap_dir" \
-        usr; then
+        .; then
         log_error "Failed to create archive for $arch"
         return 1
     fi
+    
+    log_info "Archive creation completed successfully"
+    
+    # Preview archive contents (first 20 entries)
+    log_info "Archive contents preview (first 20 entries):"
+    tar -tzf "$archive_path" | head -20 | while read -r entry; do
+        echo "    $entry"
+    done
+    
+    # Count total entries in archive
+    local total_entries=$(tar -tzf "$archive_path" | wc -l | tr -d ' ')
+    log_info "Total entries in archive: $total_entries"
     
     # Get archive size for reporting
     local size

@@ -128,30 +128,95 @@ download_bootstrap() {
         return 1
     fi
     
-    # Extract the bootstrap
+    # Extract the bootstrap directly to android_arch directory
     log_info "Extracting bootstrap for $android_arch..."
-    local extract_dir="${DOWNLOAD_DIR}/bootstrap-${termux_arch}"
+    local android_dir="${DOWNLOAD_DIR}/${android_arch}"
     
-    if ! unzip -q -o "$download_path" -d "$extract_dir"; then
+    # Remove existing directory if present
+    if [ -d "$android_dir" ]; then
+        log_info "Removing existing directory: $android_dir"
+        rm -rf "$android_dir"
+        log_info "Directory removed successfully"
+    fi
+    
+    log_info "Creating directory: $android_dir"
+    mkdir -p "$android_dir"
+    
+    # Extract directly to the android_arch directory (preserves original structure)
+    log_info "Extracting to: $android_dir"
+    log_info "Extraction operation: unzip -q -o $download_path -d $android_dir"
+    
+    if ! unzip -q -o "$download_path" -d "$android_dir"; then
         log_error "Failed to extract bootstrap for $termux_arch"
         return 1
     fi
     
-    # Restructure to have usr directory (required by packaging script)
-    log_info "Restructuring bootstrap to usr directory format..."
-    local android_dir="${DOWNLOAD_DIR}/${android_arch}"
-    if [ -d "$android_dir" ]; then
-        rm -rf "$android_dir"
+    log_info "Extraction completed successfully"
+    
+    # Log the actual bootstrap structure after extraction
+    log_info "Bootstrap structure for $android_arch:"
+    log_info "Directory tree (depth 3):"
+    if command -v tree >/dev/null 2>&1; then
+        tree -L 3 -d "$android_dir" 2>/dev/null || {
+            log_info "Root level contents:"
+            ls -la "$android_dir"
+            if [ -d "${android_dir}/usr" ]; then
+                log_info "Contents of usr/:"
+                ls -la "${android_dir}/usr"
+            fi
+        }
+    else
+        log_info "Root level contents:"
+        ls -la "$android_dir"
+        if [ -d "${android_dir}/usr" ]; then
+            log_info "Contents of usr/:"
+            ls -la "${android_dir}/usr"
+        fi
+        if [ -d "${android_dir}/usr/bin" ]; then
+            log_info "Sample binaries in usr/bin/ (first 10):"
+            ls -1 "${android_dir}/usr/bin" | head -10 | while read -r bin; do
+                echo "    - $bin"
+            done
+        fi
     fi
     
-    # Create android_dir with usr subdirectory
-    mkdir -p "${android_dir}/usr"
+    # Verify critical binaries and log their ELF interpreter paths
+    log_info "Verifying critical binaries for $android_arch:"
     
-    # Move all extracted contents into usr directory
-    mv "$extract_dir"/* "${android_dir}/usr/" 2>/dev/null || true
-    
-    # Clean up empty extract directory
-    rmdir "$extract_dir" 2>/dev/null || true
+    local critical_bins=("bash" "sh" "apt" "dpkg")
+    for bin_name in "${critical_bins[@]}"; do
+        local bin_path="${android_dir}/usr/bin/${bin_name}"
+        
+        if [ -f "$bin_path" ]; then
+            log_info "  ✓ Found: $bin_name"
+            
+            # Check if file command is available
+            if command -v file >/dev/null 2>&1; then
+                local file_info=$(file "$bin_path")
+                log_info "    File type: $file_info"
+                
+                # Extract interpreter path from file command output
+                local interpreter=$(echo "$file_info" | grep -o 'interpreter [^,]*' | sed 's/interpreter //')
+                if [ -n "$interpreter" ]; then
+                    log_info "    ELF interpreter: $interpreter"
+                fi
+            fi
+            
+            # Check if readelf is available to get interpreter path (alternative method)
+            if command -v readelf >/dev/null 2>&1; then
+                local readelf_interpreter=$(readelf -l "$bin_path" 2>/dev/null | grep -o '\[/[^]]*\]' | grep -v 'LOAD\|GNU_STACK\|GNU_RELRO' | head -1 | sed 's/\[//;s/\]//')
+                if [ -n "$readelf_interpreter" ]; then
+                    log_info "    ELF interpreter (readelf): $readelf_interpreter"
+                fi
+            fi
+            
+            # Log file permissions
+            local perms=$(ls -l "$bin_path" | awk '{print $1}')
+            log_info "    Permissions: $perms"
+        else
+            log_warn "  ✗ Not found: $bin_name at $bin_path"
+        fi
+    done
     
     log_info "Successfully processed $android_arch"
     

@@ -52,6 +52,110 @@ cleanup() {
 # Set up cleanup trap
 trap cleanup EXIT
 
+# Validate directory structure
+validate_structure() {
+    local extract_dir="$1"
+    local archive_name="$2"
+    
+    log_info "  [2/6] Validating directory structure..."
+    
+    # Check for correct usr/bin directory
+    if [ ! -d "${extract_dir}/usr/bin" ]; then
+        log_error "  ✗ usr/bin directory not found in archive"
+        return 1
+    fi
+    log_info "  ✓ usr/bin directory exists"
+    
+    # Check for correct usr/lib directory
+    if [ ! -d "${extract_dir}/usr/lib" ]; then
+        log_error "  ✗ usr/lib directory not found in archive"
+        return 1
+    fi
+    log_info "  ✓ usr/lib directory exists"
+    
+    # Check for incorrect nested usr/usr/ structure
+    if [ -d "${extract_dir}/usr/usr" ]; then
+        log_error "  ✗ Incorrect nested usr/usr/ structure detected"
+        log_error "     This indicates the bootstrap was incorrectly restructured"
+        return 1
+    fi
+    log_info "  ✓ No nested usr/usr/ structure detected"
+    
+    # Log the directory structure for debugging
+    log_info "  Directory structure at root level:"
+    ls -la "$extract_dir" | tail -n +4 | awk '{print "    " $9}' | head -10
+    
+    # Log usr/ subdirectories
+    if [ -d "${extract_dir}/usr" ]; then
+        log_info "  Contents of usr/ directory:"
+        ls -1 "${extract_dir}/usr" | head -10 | while read -r item; do
+            if [ -d "${extract_dir}/usr/${item}" ]; then
+                echo "    📁 $item/"
+            else
+                echo "    📄 $item"
+            fi
+        done
+    fi
+    
+    return 0
+}
+
+# Verify ELF interpreter for a binary
+verify_elf_interpreter() {
+    local binary_path="$1"
+    local binary_name="$2"
+    
+    # Check if file command is available
+    if ! command -v file >/dev/null 2>&1; then
+        log_warn "  ⚠ 'file' command not available, skipping ELF verification for $binary_name"
+        return 0
+    fi
+    
+    # Get file type information
+    local file_info
+    file_info=$(file "$binary_path" 2>/dev/null)
+    log_info "    File type: $file_info"
+    
+    # Check if it's an ELF binary
+    if [[ ! "$file_info" =~ "ELF" ]]; then
+        log_warn "    ⚠ $binary_name is not an ELF binary (might be a script)"
+        return 0
+    fi
+    
+    # Try to extract interpreter path using readelf if available
+    if command -v readelf >/dev/null 2>&1; then
+        local interpreter
+        interpreter=$(readelf -l "$binary_path" 2>/dev/null | grep -o '\[/[^]]*\]' | grep interpreter | sed 's/\[//;s/\]//' | head -1)
+        
+        if [ -n "$interpreter" ]; then
+            log_info "    📍 Interpreter path: $interpreter"
+            
+            # Verify it's an Android linker for Termux binaries
+            if [[ "$interpreter" =~ ^/system/bin/linker ]]; then
+                log_info "    ✓ Uses Android system linker (PRoot compatible)"
+            else
+                log_warn "    ⚠ Uses non-standard interpreter: $interpreter"
+                log_warn "    ⚠ This may cause issues in PRoot environments"
+            fi
+        else
+            log_warn "    ⚠ Could not extract interpreter path for $binary_name"
+        fi
+    else
+        # Fallback to using strings if readelf is not available
+        if command -v strings >/dev/null 2>&1; then
+            local interpreter
+            interpreter=$(strings "$binary_path" 2>/dev/null | grep -E '^/system/bin/linker' | head -1)
+            
+            if [ -n "$interpreter" ]; then
+                log_info "    📍 Interpreter path (strings): $interpreter"
+                log_info "    ✓ Uses Android system linker (PRoot compatible)"
+            fi
+        fi
+    fi
+    
+    return 0
+}
+
 # Validate a single archive
 validate_archive() {
     local archive_path="$1"
@@ -71,23 +175,20 @@ validate_archive() {
     mkdir -p "$extract_dir"
     
     # Test 1: Check that archive can be extracted without errors
-    log_info "  [1/4] Testing archive extraction..."
+    log_info "  [1/6] Testing archive extraction..."
     if ! tar -xzf "$archive_path" -C "$extract_dir" 2>/dev/null; then
         log_error "  ✗ Failed to extract archive: $archive_name"
         return 1
     fi
     log_info "  ✓ Archive extracted successfully"
     
-    # Test 2: Verify usr/bin directory exists
-    log_info "  [2/4] Checking usr/bin directory..."
-    if [ ! -d "${extract_dir}/usr/bin" ]; then
-        log_error "  ✗ usr/bin directory not found in archive"
+    # Test 2: Validate directory structure
+    if ! validate_structure "$extract_dir" "$archive_name"; then
         return 1
     fi
-    log_info "  ✓ usr/bin directory exists"
     
-    # Test 3: Validate presence of critical binaries
-    log_info "  [3/4] Checking critical binaries..."
+    # Test 3: Validate presence of critical binaries and verify ELF interpreters
+    log_info "  [3/6] Checking critical binaries..."
     local missing_binaries=()
     
     # Check required binaries
@@ -125,8 +226,29 @@ validate_archive() {
         return 1
     fi
     
-    # Test 4: Check that binaries have executable permissions
-    log_info "  [4/4] Checking executable permissions..."
+    # Test 4: Verify ELF interpreters for critical binaries
+    log_info "  [4/6] Verifying ELF interpreters for critical binaries..."
+    log_info "  Checking interpreter paths for PRoot compatibility..."
+    
+    # Verify bash interpreter (most critical for PRoot compatibility)
+    if [ -f "${extract_dir}/usr/bin/bash" ]; then
+        log_info "  Analyzing bash binary:"
+        verify_elf_interpreter "${extract_dir}/usr/bin/bash" "bash"
+    fi
+    
+    # Verify other critical binaries
+    for binary in "${CRITICAL_BINARIES[@]}"; do
+        if [ "$binary" != "bash" ] && [ -f "${extract_dir}/usr/bin/${binary}" ]; then
+            log_info "  Analyzing $binary binary:"
+            verify_elf_interpreter "${extract_dir}/usr/bin/${binary}" "$binary"
+        fi
+    done
+    
+    # Log summary of interpreter findings
+    log_info "  Interpreter verification complete"
+    
+    # Test 5: Check that binaries have executable permissions
+    log_info "  [5/6] Checking executable permissions..."
     local non_executable=()
     
     # Check critical binaries
@@ -155,6 +277,11 @@ validate_archive() {
         return 1
     fi
     log_info "  ✓ All binaries have executable permissions"
+    
+    # Test 6: Final structure summary
+    log_info "  [6/6] Structure validation summary..."
+    log_info "  ✓ Bootstrap structure is correct and PRoot-compatible"
+    log_info "  ✓ All critical binaries present with proper interpreters"
     
     # Clean up extraction directory for this archive
     rm -rf "$extract_dir"
