@@ -1,29 +1,29 @@
 {
-  "version": "1.0.1",
-  "last_updated": "2025-11-12",
+  "version": "1.0.2",
+  "last_updated": "2025-11-14",
   "architectures": {
     "arm64-v8a": {
-      "url": "https://github.com/dsaved/bafle/releases/download/v1.0.1/bootstrap-arm64-v8a-1.0.1.tar.gz",
-      "size": 28637665,
-      "checksum": "sha256:b2b7efb813c162256002e57149359061cc5575e3f91e746df89bb501df808893",
+      "url": "https://github.com/dsaved/bafle/releases/download/v1.0.2/bootstrap-arm64-v8a-1.0.2.tar.gz",
+      "size": 28637981,
+      "checksum": "sha256:d342f37b213f30da97923e4b49b066e2dd0713e2af4534642678c635f98e20b5",
       "min_android_version": 21
     },
     "armeabi-v7a": {
-      "url": "https://github.com/dsaved/bafle/releases/download/v1.0.1/bootstrap-armeabi-v7a-1.0.1.tar.gz",
-      "size": 25480226,
-      "checksum": "sha256:9e3a9687d2a1f49d32be1e247ee5ff1cf654896985082eab985655067c96dab3",
+      "url": "https://github.com/dsaved/bafle/releases/download/v1.0.2/bootstrap-armeabi-v7a-1.0.2.tar.gz",
+      "size": 25480236,
+      "checksum": "sha256:cfd058416ab0bee686e7d90e205a7b2bb840a08a2b850bb0a2719ce28c92ecb7",
       "min_android_version": 21
     },
     "x86_64": {
-      "url": "https://github.com/dsaved/bafle/releases/download/v1.0.1/bootstrap-x86_64-1.0.1.tar.gz",
-      "size": 28509121,
-      "checksum": "sha256:1567a342c7fbd871b2668d3f3ae511edf02a2e92b95236be848f14f14f2e024d",
+      "url": "https://github.com/dsaved/bafle/releases/download/v1.0.2/bootstrap-x86_64-1.0.2.tar.gz",
+      "size": 28509480,
+      "checksum": "sha256:7410edcef2d46778dfe98c0cd1e734bc942a1ab35e3b91a17c5cad2e156f54d6",
       "min_android_version": 21
     },
     "x86": {
-      "url": "https://github.com/dsaved/bafle/releases/download/v1.0.1/bootstrap-x86-1.0.1.tar.gz",
-      "size": 27801312,
-      "checksum": "sha256:df726d7fbb7dddc639ff13047ea904f7a0194e9a41ed7a17951369e253bd2c30",
+      "url": "https://github.com/dsaved/bafle/releases/download/v1.0.2/bootstrap-x86-1.0.2.tar.gz",
+      "size": 27801325,
+      "checksum": "sha256:702cdeb52070946249ae36b5eb503243833cf74a79c679b0f308fe3e9d2974af",
       "min_android_version": 21
     }
   }
