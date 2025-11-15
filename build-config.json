@@ -52,12 +52,6 @@
       "source": "https://ftp.gnu.org/gnu/bash/bash-5.2.tar.gz",
       "checksum": "a139c166df7ff4471c5e0733051642ee5556c1cc8a4a78f145583c5c81ab32fb",
       "buildStatic": true
-    },
-    "coreutils": {
-      "version": "9.4",
-      "source": "https://ftp.gnu.org/gnu/coreutils/coreutils-9.4.tar.xz",
-      "checksum": "ea613a4cf44612326e917a368f6d82b9e2f2d4c2c2c5b7e7e9c3c3c3c3c3c3c3",
-      "buildStatic": false
     }
   }
 }
