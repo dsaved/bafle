@@ -1,10 +1,12 @@
 # Bootstrap Build Workflow
 
-Automated GitHub Actions workflow for building and deploying Termux bootstrap packages for mobile code editor applications.
+Automated GitHub Actions workflow for building and deploying bootstrap packages for mobile code editor applications with PRoot compatibility.
 
 ## Overview
 
-This project provides a complete CI/CD pipeline that downloads pre-built Termux bootstrap packages, repackages them for Android architectures, validates their integrity, and publishes them as GitHub releases with automatic manifest updates.
+This project provides a complete CI/CD pipeline orchestrated by GitHub Actions that builds, tests, and publishes bootstrap packages. The workflow coordinates all build components from source download through compilation, testing, packaging, and release publishing.
+
+**Key Architecture**: GitHub Actions serves as the central build orchestrator, coordinating all scripts and managing parallel builds across multiple modes and architectures. See [Workflow Architecture](docs/WORKFLOW_ARCHITECTURE.md) for details.
 
 ## Features
 
@@ -22,6 +24,59 @@ This project provides a complete CI/CD pipeline that downloads pre-built Termux 
 - **armeabi-v7a** - 32-bit ARM (older Android devices)
 - **x86_64** - 64-bit x86 (emulators and tablets)
 - **x86** - 32-bit x86 (older emulators)
+
+## Build Modes
+
+The bootstrap builder supports three build modes:
+
+### Static Mode (Recommended)
+
+Produces statically-linked binaries that work in PRoot environments without requiring a dynamic linker.
+
+```bash
+./scripts/build-wrapper.sh --mode static --arch arm64-v8a --version 1.0.0
+```
+
+**Advantages:**
+- ✅ Full PRoot compatibility
+- ✅ No dynamic linker required
+- ✅ Maximum portability
+
+**Use when:** You need PRoot compatibility (recommended for most use cases)
+
+### Linux-Native Mode
+
+Produces dynamically-linked binaries using standard Linux dynamic linker.
+
+```bash
+./scripts/build-wrapper.sh --mode linux-native --arch arm64-v8a --version 1.0.0
+```
+
+**Advantages:**
+- ✅ PRoot compatible
+- ✅ Smaller size than static
+- ✅ Standard Linux linker
+
+**Use when:** You need PRoot compatibility with smaller bootstrap size
+
+### Android-Native Mode (DEPRECATED)
+
+⚠️ **DEPRECATED**: This mode is maintained for backward compatibility only and will be removed in a future release.
+
+Downloads pre-built Termux bootstrap packages with Android-native binaries.
+
+```bash
+./scripts/build-wrapper.sh --mode android-native --arch arm64-v8a --version 1.0.0
+```
+
+**Limitations:**
+- ❌ NOT PRoot compatible
+- ❌ Requires Termux environment or root access
+- ❌ Limited portability
+
+**Migration:** See [Android-Native Deprecation Notice](docs/ANDROID_NATIVE_DEPRECATION.md) for migration guide.
+
+**Use when:** You absolutely need backward compatibility with existing android-native deployments (not recommended for new projects)
 
 ## Workflow Usage
 

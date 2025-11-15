@@ -7,9 +7,208 @@ on:
         description: 'Version number (e.g., 1.0.0)'
         required: true
         type: string
+      build_modes:
+        description: 'Build modes to create (comma-separated: static,linux-native,android-native)'
+        required: false
+        default: 'static'
+        type: string
+      architectures:
+        description: 'Architectures to build (comma-separated: arm64-v8a,armeabi-v7a,x86_64,x86)'
+        required: false
+        default: 'arm64-v8a,armeabi-v7a,x86_64,x86'
+        type: string
+      run_tests:
+        description: 'Run PRoot compatibility tests'
+        required: false
+        default: true
+        type: boolean
 
 jobs:
-  build-and-deploy:
+  # Matrix job to build multiple modes and architectures in parallel
+  build-bootstrap:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    strategy:
+      matrix:
+        mode: ${{ fromJson(format('["{0}"]', replace(inputs.build_modes, ',', '","'))) }}
+        arch: ${{ fromJson(format('["{0}"]', replace(inputs.architectures, ',', '","'))) }}
+      fail-fast: false
+    
+    env:
+      VERSION: ${{ inputs.version }}
+      BUILD_MODE: ${{ matrix.mode }}
+      TARGET_ARCH: ${{ matrix.arch }}
+      RUN_TESTS: ${{ inputs.run_tests }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO_NAME: ${{ github.repository }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup build environment
+        run: |
+          echo "================================================"
+          echo "Setting up build environment"
+          echo "================================================"
+          echo "Mode: $BUILD_MODE"
+          echo "Architecture: $TARGET_ARCH"
+          echo "Version: $VERSION"
+          echo ""
+          
+          # Make scripts executable
+          chmod +x scripts/*.sh
+          
+          # Install build dependencies
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            gcc \
+            g++ \
+            make \
+            wget \
+            curl \
+            jq \
+            xz-utils \
+            zstd \
+            bzip2 \
+            file \
+            patchelf \
+            qemu-user-static
+          
+          echo "✅ Build environment ready"
+      
+      - name: Validate configuration
+        run: |
+          echo "================================================"
+          echo "Step 1/7: Configuration Validation"
+          echo "================================================"
+          
+          # Create temporary config for this build
+          cat > build-config-temp.json << EOF
+          {
+            "version": "$VERSION",
+            "buildMode": "$BUILD_MODE",
+            "architectures": ["$TARGET_ARCH"],
+            "compression": "xz",
+            "stripSymbols": true,
+            "runTests": $RUN_TESTS
+          }
+          EOF
+          
+          # Validate configuration
+          ./scripts/config-validator.sh build-config-temp.json
+          
+          echo "✅ Configuration validated"
+      
+      - name: Download source packages
+        if: ${{ matrix.mode != 'android-native' }}
+        run: |
+          echo "================================================"
+          echo "Step 2/7: Source Package Download"
+          echo "================================================"
+          
+          ./scripts/download-sources.sh
+          
+          echo "✅ Sources downloaded and verified"
+      
+      - name: Compile binaries
+        if: ${{ matrix.mode != 'android-native' }}
+        run: |
+          echo "================================================"
+          echo "Step 3/7: Compilation ($BUILD_MODE mode)"
+          echo "================================================"
+          
+          if [ "$BUILD_MODE" = "static" ]; then
+            ./scripts/build-static.sh --arch "$TARGET_ARCH" --version "$VERSION"
+          elif [ "$BUILD_MODE" = "linux-native" ]; then
+            ./scripts/build-linux-native.sh --android-arch "$TARGET_ARCH" --version "$VERSION"
+          fi
+          
+          echo "✅ Compilation completed"
+      
+      - name: Download android-native bootstrap
+        if: ${{ matrix.mode == 'android-native' }}
+        run: |
+          echo "================================================"
+          echo "Step 2-3/7: Download Android-Native Bootstrap"
+          echo "================================================"
+          echo "⚠️  WARNING: android-native mode is deprecated"
+          echo "These binaries are NOT PRoot compatible"
+          
+          ./scripts/download-bootstraps.sh
+          
+          echo "✅ Android-native bootstrap downloaded"
+      
+      - name: Assemble bootstrap
+        if: ${{ matrix.mode != 'android-native' }}
+        run: |
+          echo "================================================"
+          echo "Step 4/7: Bootstrap Assembly"
+          echo "================================================"
+          
+          ./scripts/assemble-bootstrap.sh --mode "$BUILD_MODE" --arch "$TARGET_ARCH" --version "$VERSION"
+          
+          echo "✅ Bootstrap assembled"
+      
+      - name: Test PRoot compatibility
+        if: ${{ inputs.run_tests && matrix.mode != 'android-native' }}
+        run: |
+          echo "================================================"
+          echo "Step 5/7: PRoot Compatibility Testing"
+          echo "================================================"
+          
+          ./scripts/test-proot-compatibility.sh --mode "$BUILD_MODE" --arch "$TARGET_ARCH" --version "$VERSION"
+          
+          echo "✅ PRoot tests passed"
+      
+      - name: Package archive
+        run: |
+          echo "================================================"
+          echo "Step 6/7: Archive Packaging"
+          echo "================================================"
+          
+          ./scripts/package-archives.sh --version "$VERSION" --mode "$BUILD_MODE" --arch "$TARGET_ARCH"
+          
+          echo "✅ Archive packaged"
+      
+      - name: Generate checksums
+        id: checksums
+        run: |
+          echo "================================================"
+          echo "Step 7/7: Checksum Generation"
+          echo "================================================"
+          
+          cd bootstrap-archives
+          ../scripts/generate-checksums.sh --version "$VERSION" --mode "$BUILD_MODE" --arch "$TARGET_ARCH"
+          
+          # Save checksum data for manifest
+          CHECKSUM_DATA=$(cat "checksums-${BUILD_MODE}-${TARGET_ARCH}.json")
+          echo "checksum_data<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHECKSUM_DATA" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          cd ..
+          
+          echo "✅ Checksums generated"
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: bootstrap-${{ matrix.mode }}-${{ matrix.arch }}-${{ inputs.version }}
+          path: |
+            bootstrap-archives/bootstrap-${{ matrix.mode }}-${{ matrix.arch }}-${{ inputs.version }}.tar.xz
+            bootstrap-archives/checksums-${{ matrix.mode }}-${{ matrix.arch }}.txt
+            bootstrap-archives/checksums-${{ matrix.mode }}-${{ matrix.arch }}.json
+            test-results/test-report-${{ matrix.mode }}-${{ matrix.arch }}.json
+          retention-days: 7
+          if-no-files-found: error
+  
+  # Deploy job runs after all builds complete
+  deploy:
+    needs: build-bootstrap
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -23,512 +222,160 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
-      - name: Validate version format
-        run: |
-          echo "Validating version format: $VERSION"
-          
-          # Check if version matches semantic versioning pattern (X.Y.Z)
-          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "❌ Error: Invalid version format '$VERSION'"
-            echo ""
-            echo "Version must follow semantic versioning pattern: X.Y.Z"
-            echo "Where X, Y, and Z are non-negative integers"
-            echo ""
-            echo "Examples of valid versions:"
-            echo "  - 1.0.0"
-            echo "  - 2.3.1"
-            echo "  - 10.15.3"
-            echo ""
-            echo "Examples of invalid versions:"
-            echo "  - 1.0 (missing patch version)"
-            echo "  - v1.0.0 (should not include 'v' prefix)"
-            echo "  - 1.0.0-beta (pre-release tags not supported)"
-            echo "  - 1.0.0+build (build metadata not supported)"
-            exit 1
-          fi
-          
-          echo "✅ Version format is valid: $VERSION"
-          echo "Proceeding with bootstrap build for version $VERSION"
-      
       - name: Make scripts executable
-        run: |
-          echo "Making all scripts executable..."
-          if ! chmod +x scripts/*.sh; then
-            echo "❌ Error: Failed to make scripts executable"
-            echo "This could be due to:"
-            echo "  - Missing scripts directory"
-            echo "  - Insufficient permissions"
-            exit 1
-          fi
-          echo "✅ All scripts are now executable"
+        run: chmod +x scripts/*.sh
       
-      - name: Download Termux bootstrap packages
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      
+      - name: Organize artifacts
         run: |
           echo "================================================"
-          echo "Step 1/7: Downloading Termux Bootstrap Packages"
+          echo "Organizing Build Artifacts"
           echo "================================================"
+          
+          mkdir -p bootstrap-archives test-results
+          
+          # Move archives and checksums
+          find artifacts -name "*.tar.xz" -exec mv {} bootstrap-archives/ \;
+          find artifacts -name "checksums-*.txt" -exec mv {} bootstrap-archives/ \;
+          find artifacts -name "checksums-*.json" -exec mv {} bootstrap-archives/ \;
+          find artifacts -name "test-report-*.json" -exec mv {} test-results/ \; 2>/dev/null || true
+          
+          # List what we have
           echo ""
-          
-          if ! ./scripts/download-bootstraps.sh; then
-            echo ""
-            echo "❌ Error: Bootstrap download failed"
-            echo "This could be due to:"
-            echo "  - Network connectivity issues"
-            echo "  - Termux repository unavailable"
-            echo "  - Invalid bootstrap release tag"
-            echo ""
-            echo "Please check the logs above for specific error details"
-            exit 1
-          fi
-          
+          echo "Archives:"
+          ls -lh bootstrap-archives/*.tar.xz
           echo ""
-          echo "✅ Bootstrap download completed successfully"
-      
-      - name: Package bootstrap archives
-        run: |
+          echo "Checksums:"
+          ls -lh bootstrap-archives/checksums-*.{txt,json}
           echo ""
-          echo "========================================"
-          echo "Step 2/7: Packaging Bootstrap Archives"
-          echo "========================================"
-          echo ""
+          echo "Test Reports:"
+          ls -lh test-results/*.json 2>/dev/null || echo "No test reports"
           
-          if ! ./scripts/package-archives.sh "$VERSION"; then
-            echo ""
-            echo "❌ Error: Archive packaging failed"
-            echo "This could be due to:"
-            echo "  - Missing bootstrap directories"
-            echo "  - Insufficient disk space"
-            echo "  - Invalid permissions on bootstrap files"
-            echo ""
-            echo "Please check the logs above for specific error details"
-            exit 1
-          fi
-          
-          echo ""
-          echo "✅ Archive packaging completed successfully"
-      
-      - name: Validate bootstrap archives
-        run: |
-          echo ""
-          echo "========================================"
-          echo "Step 3/7: Validating Bootstrap Archives"
-          echo "========================================"
-          echo ""
-          
-          if ! ./scripts/validate-archives.sh; then
-            echo ""
-            echo "❌ Error: Archive validation failed"
-            echo "One or more archives are invalid or incomplete"
-            echo ""
-            echo "Common issues:"
-            echo "  - Missing critical binaries (bash, git, node, python)"
-            echo "  - Incorrect file permissions"
-            echo "  - Corrupted archive files"
-            echo ""
-            echo "Please check the validation logs above for specific failures"
-            exit 1
-          fi
-          
-          echo ""
-          echo "✅ Archive validation completed successfully"
-      
-      - name: Generate checksums and calculate sizes
-        id: checksums
-        run: |
-          echo ""
-          echo "=================================================="
-          echo "Step 4/7: Generating Checksums and Calculating Sizes"
-          echo "=================================================="
-          echo ""
-          
-          # Change to archive directory
-          cd bootstrap-archives
-          
-          if ! ../scripts/generate-checksums.sh; then
-            echo ""
-            echo "❌ Error: Checksum generation failed"
-            echo "This could be due to:"
-            echo "  - Missing archive files"
-            echo "  - Corrupted archive files"
-            echo "  - Missing sha256sum or shasum command"
-            echo ""
-            echo "Please check the logs above for specific error details"
-            exit 1
-          fi
-          
-          # Capture JSON output for manifest update
-          if [ ! -f "checksums.json" ]; then
-            echo "❌ Error: checksums.json file not created"
-            exit 1
-          fi
-          
-          CHECKSUM_DATA=$(cat checksums.json)
-          
-          # Validate JSON format
-          if ! echo "$CHECKSUM_DATA" | jq empty 2>/dev/null; then
-            echo "❌ Error: checksums.json contains invalid JSON"
-            exit 1
-          fi
-          
-          echo "checksum_data<<EOF" >> $GITHUB_OUTPUT
-          echo "$CHECKSUM_DATA" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-          
-          # Move checksums files to root for release upload
-          mv checksums.txt checksums.json ../ || {
-            echo "❌ Error: Failed to move checksum files"
-            exit 1
-          }
-          
-          cd ..
-          
-          echo ""
-          echo "✅ Checksum generation completed successfully"
+          echo "✅ Artifacts organized"
       
       - name: Update bootstrap manifest
         run: |
-          echo ""
-          echo "====================================="
-          echo "Step 5/7: Updating Bootstrap Manifest"
-          echo "====================================="
-          echo ""
+          echo "================================================"
+          echo "Updating Bootstrap Manifest"
+          echo "================================================"
           
-          if ! ./scripts/update-manifest.sh "$VERSION" "$REPO_NAME" '${{ steps.checksums.outputs.checksum_data }}'; then
-            echo ""
-            echo "❌ Error: Manifest update failed"
-            echo "This could be due to:"
-            echo "  - Invalid checksums JSON data"
-            echo "  - Missing or corrupted manifest file"
-            echo "  - jq command not available"
-            echo ""
-            echo "Please check the logs above for specific error details"
-            exit 1
-          fi
+          # Get base URL for test reports
+          TEST_REPORT_BASE="https://github.com/$REPO_NAME/releases/download/v$VERSION"
           
-          echo ""
-          echo "✅ Manifest update completed successfully"
-      
-      - name: Validate manifest JSON syntax
-        run: |
-          echo ""
-          echo "Validating updated manifest JSON syntax..."
-          
-          if ! jq empty bootstrap-manifest.json 2>/dev/null; then
-            echo "❌ Error: bootstrap-manifest.json contains invalid JSON"
-            echo ""
-            echo "The manifest file was updated but contains syntax errors"
-            echo "This should not happen if update-manifest.sh completed successfully"
-            exit 1
-          fi
-          
-          echo "✅ Manifest JSON validation passed"
-          echo ""
-          
-          # Display updated manifest for verification
-          echo "Updated manifest content:"
-          echo "------------------------"
-          jq '.' bootstrap-manifest.json
-      
-      - name: Commit and push manifest changes
-        run: |
-          echo ""
-          echo "============================================"
-          echo "Step 6/7: Committing and Pushing Manifest"
-          echo "============================================"
-          echo ""
-          
-          # Configure git user
-          echo "Configuring git user..."
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Add manifest to staging
-          echo "Adding manifest to git staging..."
-          if ! git add bootstrap-manifest.json; then
-            echo "❌ Error: Failed to add manifest to git staging"
-            exit 1
-          fi
-          
-          # Check if there are changes to commit
-          if git diff --staged --quiet; then
-            echo "ℹ️  No changes to commit in bootstrap-manifest.json"
-            echo "The manifest may already be up to date"
-          else
-            # Show what will be committed
-            echo ""
-            echo "Changes to be committed:"
-            git diff --staged --stat
-            echo ""
-            
-            # Commit changes
-            echo "Committing changes..."
-            if ! git commit -m "Update bootstrap manifest to v$VERSION"; then
-              echo "❌ Error: Failed to commit manifest changes"
-              exit 1
-            fi
-            
-            echo "✅ Changes committed successfully"
-            echo ""
-            
-            # Push to main branch with error handling
-            echo "Pushing changes to main branch..."
-            if ! git push origin HEAD:main; then
-              echo ""
-              echo "❌ Error: Failed to push manifest changes to main branch"
-              echo "This could be due to:"
-              echo "  - Branch protection rules requiring pull requests"
-              echo "  - Insufficient permissions on GITHUB_TOKEN"
-              echo "  - Network connectivity issues"
-              echo "  - Conflicts with remote changes"
-              echo ""
-              echo "Please check repository settings and workflow permissions"
-              exit 1
-            fi
-            
-            echo "✅ Manifest changes committed and pushed successfully"
-          fi
-      
-      - name: Create GitHub release and upload assets
-        id: create_release
-        run: |
-          echo ""
-          echo "=============================================="
-          echo "Step 7/7: Creating GitHub Release and Uploading Assets"
-          echo "=============================================="
-          echo ""
-          
-          # GitHub CLI is pre-installed on ubuntu-latest runners
-          # Verify gh is available
-          echo "Verifying GitHub CLI availability..."
-          if ! command -v gh &> /dev/null; then
-            echo "GitHub CLI not found, installing..."
-            
-            if ! curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg 2>/dev/null; then
-              echo "❌ Error: Failed to download GitHub CLI keyring"
-              exit 1
-            fi
-            
-            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-            
-            if ! sudo apt update; then
-              echo "❌ Error: Failed to update apt package list"
-              exit 1
-            fi
-            
-            if ! sudo apt install gh -y; then
-              echo "❌ Error: Failed to install GitHub CLI"
-              exit 1
-            fi
-            
-            echo "✅ GitHub CLI installed successfully"
-          else
-            echo "✅ GitHub CLI is available"
-          fi
-          
-          echo ""
-          echo "Verifying all archive files exist..."
-          
-          # Check that all required files exist
-          required_files=(
-            "bootstrap-archives/bootstrap-arm64-v8a-$VERSION.tar.gz"
-            "bootstrap-archives/bootstrap-armeabi-v7a-$VERSION.tar.gz"
-            "bootstrap-archives/bootstrap-x86_64-$VERSION.tar.gz"
-            "bootstrap-archives/bootstrap-x86-$VERSION.tar.gz"
-            "checksums.txt"
-          )
-          
-          missing_files=()
-          for file in "${required_files[@]}"; do
-            if [ ! -f "$file" ]; then
-              missing_files+=("$file")
-              echo "  ✗ Missing: $file"
-            else
-              echo "  ✓ Found: $file"
+          # Update manifest for each mode/arch combination
+          for checksum_file in bootstrap-archives/checksums-*.json; do
+            if [ -f "$checksum_file" ]; then
+              # Extract mode and arch from filename
+              filename=$(basename "$checksum_file")
+              MODE_ARCH=$(echo "$filename" | sed 's/checksums-\(.*\)\.json/\1/')
+              
+              echo "Updating manifest for: $MODE_ARCH"
+              
+              CHECKSUM_DATA=$(cat "$checksum_file")
+              
+              # Update manifest
+              ./scripts/update-manifest.sh "$VERSION" "$REPO_NAME" "$CHECKSUM_DATA" "$MODE_ARCH" "$TEST_REPORT_BASE"
+              
+              echo "✅ Manifest updated for $MODE_ARCH"
             fi
           done
           
-          if [ ${#missing_files[@]} -gt 0 ]; then
-            echo ""
-            echo "❌ Error: Required files are missing"
-            echo "Cannot create release without all archive files"
+          echo "✅ All manifest updates completed"
+      
+      - name: Validate manifest
+        run: |
+          echo "================================================"
+          echo "Validating Manifest"
+          echo "================================================"
+          
+          if ! jq empty bootstrap-manifest.json; then
+            echo "❌ Error: Invalid JSON in manifest"
             exit 1
           fi
           
+          echo "✅ Manifest validated"
           echo ""
-          echo "Creating release notes..."
+          echo "Manifest summary:"
+          jq '.version, .releaseDate, .bootstraps | keys' bootstrap-manifest.json
+      
+      - name: Commit and push manifest
+        run: |
+          echo "================================================"
+          echo "Committing Manifest Changes"
+          echo "================================================"
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add bootstrap-manifest.json
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update bootstrap manifest to v$VERSION"
+            git push origin HEAD:main
+            echo "✅ Manifest committed and pushed"
+          fi
+      
+      - name: Create GitHub release
+        id: create_release
+        run: |
+          echo "================================================"
+          echo "Creating GitHub Release"
+          echo "================================================"
+          
+          # Collect all files
+          ARCHIVE_FILES=(bootstrap-archives/*.tar.xz)
+          CHECKSUM_FILES=(bootstrap-archives/checksums-*.txt)
+          TEST_REPORTS=(test-results/*.json)
           
           # Create release notes
           cat > release_notes.md << 'EOF'
-          Bootstrap archives for mobile code editor v$VERSION
+          Bootstrap archives for mobile code editor v${{ inputs.version }}
+          
+          ## Build Modes
+          - **static**: Statically-linked binaries (PRoot compatible, recommended)
+          - **linux-native**: Dynamically-linked with Linux linker (PRoot compatible)
+          - **android-native**: Android-native binaries (not PRoot compatible)
           
           ## Architectures
-          - **arm64-v8a** (64-bit ARM) - Modern Android devices
-          - **armeabi-v7a** (32-bit ARM) - Older Android devices
-          - **x86_64** (64-bit x86) - Emulators and tablets
-          - **x86** (32-bit x86) - Older emulators
+          - arm64-v8a, armeabi-v7a, x86_64, x86
           
           ## Included Tools
-          - Bash, Git, Node.js, npm, Python 3
-          - Core utilities (ls, cat, grep, sed, awk, etc.)
-          - Development tools (make, gcc, pkg-config)
+          - Bash shell
+          - BusyBox utilities (300+ Unix commands)
+          - Core utilities
           
-          ## Checksums
-          See `checksums.txt` for SHA-256 verification.
-          
-          ## Installation
-          These archives are automatically downloaded by the mobile editor app based on device architecture.
+          ## PRoot Compatibility
+          Static and linux-native modes are tested for PRoot compatibility.
           EOF
           
-          # Substitute VERSION in release notes
-          sed -i "s/\$VERSION/$VERSION/g" release_notes.md
-          
-          echo "✅ Release notes created"
-          echo ""
-          echo "Creating GitHub release with tag v$VERSION..."
-          
-          # Create the release with all assets including manifest
-          if ! gh release create "v$VERSION" \
+          # Create release
+          gh release create "v$VERSION" \
             --title "Bootstrap v$VERSION" \
             --notes-file release_notes.md \
             --latest \
-            bootstrap-archives/bootstrap-arm64-v8a-$VERSION.tar.gz \
-            bootstrap-archives/bootstrap-armeabi-v7a-$VERSION.tar.gz \
-            bootstrap-archives/bootstrap-x86_64-$VERSION.tar.gz \
-            bootstrap-archives/bootstrap-x86-$VERSION.tar.gz \
-            checksums.txt \
-            bootstrap-manifest.json; then
-            echo ""
-            echo "❌ Error: Failed to create GitHub release"
-            echo "This could be due to:"
-            echo "  - Release tag v$VERSION already exists"
-            echo "  - Insufficient permissions on GITHUB_TOKEN"
-            echo "  - Network connectivity issues"
-            echo "  - Invalid release assets"
-            echo ""
-            echo "Please check if the release already exists or verify permissions"
-            exit 1
-          fi
+            "${ARCHIVE_FILES[@]}" \
+            "${CHECKSUM_FILES[@]}" \
+            "${TEST_REPORTS[@]}" \
+            bootstrap-manifest.json
           
-          echo ""
-          echo "✅ Release created successfully!"
-          echo ""
-          
-          # Capture release URL
-          echo "Fetching release URL..."
-          if ! RELEASE_URL=$(gh release view "v$VERSION" --json url --jq .url 2>/dev/null); then
-            echo "⚠️  Warning: Could not fetch release URL, but release was created"
-            RELEASE_URL="https://github.com/$REPO_NAME/releases/tag/v$VERSION"
-          fi
-          
+          RELEASE_URL=$(gh release view "v$VERSION" --json url --jq .url)
           echo "release_url=$RELEASE_URL" >> $GITHUB_OUTPUT
           
-          echo ""
-          echo "📦 Successfully uploaded assets:"
-          echo "  ✓ bootstrap-arm64-v8a-$VERSION.tar.gz"
-          echo "  ✓ bootstrap-armeabi-v7a-$VERSION.tar.gz"
-          echo "  ✓ bootstrap-x86_64-$VERSION.tar.gz"
-          echo "  ✓ bootstrap-x86-$VERSION.tar.gz"
-          echo "  ✓ checksums.txt"
-          echo "  ✓ bootstrap-manifest.json"
-          echo ""
-          echo "🔗 Release URL: $RELEASE_URL"
-          echo ""
-          echo "📋 Manifest URLs:"
-          echo "  Versioned: https://github.com/$REPO_NAME/releases/download/v$VERSION/bootstrap-manifest.json"
-          echo "  Latest: https://github.com/$REPO_NAME/releases/latest/download/bootstrap-manifest.json"
+          echo "✅ Release created: $RELEASE_URL"
       
-      - name: Verify manifest accessibility
-        run: |
-          echo ""
-          echo "Verifying manifest URLs are accessible..."
-          
-          # Versioned URL
-          VERSIONED_URL="https://github.com/$REPO_NAME/releases/download/v$VERSION/bootstrap-manifest.json"
-          echo "Testing versioned URL: $VERSIONED_URL"
-          
-          # Wait for GitHub to process the release
-          echo "Waiting for GitHub CDN to propagate..."
-          sleep 5
-          
-          # Test versioned URL
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -L "$VERSIONED_URL")
-          if [ "$HTTP_STATUS" = "200" ]; then
-            echo "✅ Versioned URL is accessible (HTTP $HTTP_STATUS)"
-            if curl -s -L "$VERSIONED_URL" | jq empty 2>/dev/null; then
-              echo "✅ Versioned manifest is valid JSON"
-            fi
-          else
-            echo "⚠️  Warning: Versioned URL returned HTTP $HTTP_STATUS"
-          fi
-          
-          echo ""
-          
-          # Test latest URL
-          LATEST_URL="https://github.com/$REPO_NAME/releases/latest/download/bootstrap-manifest.json"
-          echo "Testing latest URL: $LATEST_URL"
-          
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -L "$LATEST_URL")
-          if [ "$HTTP_STATUS" = "200" ]; then
-            echo "✅ Latest URL is accessible (HTTP $HTTP_STATUS)"
-            if curl -s -L "$LATEST_URL" | jq empty 2>/dev/null; then
-              echo "✅ Latest manifest is valid JSON"
-            fi
-          else
-            echo "⚠️  Warning: Latest URL returned HTTP $HTTP_STATUS"
-            echo "This is often due to GitHub CDN propagation delay (can take 1-2 minutes)"
-            echo "The manifest is uploaded and will be accessible shortly"
-          fi
-          
-          echo ""
-          echo "📋 Manifest is now available at:"
-          echo "  Versioned: $VERSIONED_URL"
-          echo "  Latest: $LATEST_URL"
-      
-      - name: Workflow Summary
+      - name: Workflow summary
         if: always()
         run: |
-          echo ""
-          echo "=================================================="
-          echo "           WORKFLOW EXECUTION SUMMARY"
-          echo "=================================================="
-          echo ""
+          echo "================================================"
+          echo "WORKFLOW SUMMARY"
+          echo "================================================"
           echo "Version: $VERSION"
-          echo "Repository: $REPO_NAME"
-          echo "Workflow Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          echo ""
-          
-          if [ "${{ job.status }}" = "success" ]; then
-            echo "✅ Status: SUCCESS"
-            echo ""
-            echo "📦 Created Assets:"
-            echo "  ✓ bootstrap-arm64-v8a-$VERSION.tar.gz"
-            echo "  ✓ bootstrap-armeabi-v7a-$VERSION.tar.gz"
-            echo "  ✓ bootstrap-x86_64-$VERSION.tar.gz"
-            echo "  ✓ bootstrap-x86-$VERSION.tar.gz"
-            echo "  ✓ checksums.txt"
-            echo "  ✓ bootstrap-manifest.json"
-            echo ""
-            echo "🔗 Release URL:"
-            echo "   ${{ steps.create_release.outputs.release_url }}"
-            echo ""
-            echo "📋 Manifest URL:"
-            echo "   https://github.com/$REPO_NAME/releases/download/v$VERSION/bootstrap-manifest.json"
-            echo ""
-            echo "✨ All bootstrap archives have been built, validated, and published!"
-            echo "   The mobile app can now download bootstrap v$VERSION"
-          else
-            echo "❌ Status: FAILED"
-            echo ""
-            echo "The workflow encountered errors during execution."
-            echo "Please review the logs above to identify the failure point."
-            echo ""
-            echo "Common failure scenarios:"
-            echo "  - Network issues downloading Termux packages"
-            echo "  - Archive validation failures (missing binaries)"
-            echo "  - Permission issues creating release or pushing commits"
-            echo "  - Invalid version format"
-            echo ""
-            echo "Check the specific step that failed for detailed error messages."
-          fi
-          echo ""
-          echo "=================================================="
+          echo "Status: ${{ job.status }}"
+          echo "Release: ${{ steps.create_release.outputs.release_url }}"
+          echo "================================================"

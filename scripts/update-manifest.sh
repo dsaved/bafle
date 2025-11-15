@@ -5,10 +5,13 @@ set -u  # Exit on undefined variable
 set -o pipefail  # Exit on pipe failure
 
 # Script to update bootstrap-manifest.json with new version, URLs, checksums, and sizes
-# Usage: ./update-manifest.sh <version> <repo_name> <checksums_json>
+# Supports multiple build modes (static, linux-native, android-native)
+# Usage: ./update-manifest.sh <version> <repo_name> <checksums_json> [build_mode] [test_report_base_url]
 #   version: Version number (e.g., 1.0.0)
 #   repo_name: GitHub repository in format owner/repo (e.g., dsaved/bafle)
 #   checksums_json: JSON string with checksum and size data for each architecture
+#   build_mode: Build mode (static, linux-native, or android-native) - optional, defaults to static
+#   test_report_base_url: Base URL for test reports - optional
 
 # Color codes for output
 RED='\033[0;31m'
@@ -32,6 +35,8 @@ log_error() {
 VERSION="${1:-}"
 REPO_NAME="${2:-}"
 CHECKSUMS_JSON="${3:-}"
+BUILD_MODE="${4:-static}"
+TEST_REPORT_BASE_URL="${5:-}"
 MANIFEST_FILE="bootstrap-manifest.json"
 
 log_info "Starting manifest update process..."
@@ -39,24 +44,36 @@ log_info "Starting manifest update process..."
 # Validate inputs
 if [[ -z "$VERSION" ]]; then
     log_error "Version number is required"
-    log_error "Usage: $0 <version> <repo_name> <checksums_json>"
-    log_error "Example: $0 1.0.0 dsaved/bafle '{...}'"
+    log_error "Usage: $0 <version> <repo_name> <checksums_json> [build_mode] [test_report_base_url]"
+    log_error "Example: $0 1.0.0 dsaved/bafle '{...}' static"
     exit 1
 fi
 
 if [[ -z "$REPO_NAME" ]]; then
     log_error "Repository name is required"
-    log_error "Usage: $0 <version> <repo_name> <checksums_json>"
-    log_error "Example: $0 1.0.0 dsaved/bafle '{...}'"
+    log_error "Usage: $0 <version> <repo_name> <checksums_json> [build_mode] [test_report_base_url]"
+    log_error "Example: $0 1.0.0 dsaved/bafle '{...}' static"
     exit 1
 fi
 
 if [[ -z "$CHECKSUMS_JSON" ]]; then
     log_error "Checksums JSON is required"
-    log_error "Usage: $0 <version> <repo_name> <checksums_json>"
+    log_error "Usage: $0 <version> <repo_name> <checksums_json> [build_mode] [test_report_base_url]"
     log_error "This should be the JSON output from generate-checksums.sh"
     exit 1
 fi
+
+# Validate build mode
+case "$BUILD_MODE" in
+    static|linux-native|android-native)
+        log_info "Build mode: $BUILD_MODE"
+        ;;
+    *)
+        log_error "Invalid build mode: $BUILD_MODE"
+        log_error "Supported modes: static, linux-native, android-native"
+        exit 1
+        ;;
+esac
 
 # Validate version format
 if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -86,7 +103,31 @@ CURRENT_DATE=$(date +%Y-%m-%d)
 
 log_info "Updating manifest with version $VERSION"
 log_info "Repository: $REPO_NAME"
+log_info "Build mode: $BUILD_MODE"
 log_info "Date: $CURRENT_DATE"
+
+# Determine PRoot compatibility based on build mode
+PROOT_COMPATIBLE="true"
+if [[ "$BUILD_MODE" == "android-native" ]]; then
+    PROOT_COMPATIBLE="false"
+    log_warn "Android-native mode is not PRoot compatible"
+fi
+
+# Determine additional metadata based on build mode
+case "$BUILD_MODE" in
+    static)
+        LIBC="musl"
+        LINKER=""
+        ;;
+    linux-native)
+        LIBC=""
+        LINKER="/lib/ld-linux-aarch64.so.1"
+        ;;
+    android-native)
+        LIBC=""
+        LINKER="/system/bin/linker64"
+        ;;
+esac
 
 # Parse checksums JSON to validate it
 log_info "Validating checksums JSON..."
@@ -118,19 +159,74 @@ log_info "Created backup: $BACKUP_FILE"
 # Create temporary file for updated manifest
 TEMP_MANIFEST=$(mktemp)
 
-# Update manifest using jq
+# Determine file extension based on compression (default to xz for now)
+FILE_EXTENSION="tar.xz"
+
+# Build the jq command dynamically based on available metadata
 log_info "Updating manifest fields..."
+
+# Build jq filter for mode-specific metadata
+MODE_METADATA=""
+if [[ -n "$LIBC" ]]; then
+    MODE_METADATA="$MODE_METADATA | .libc = \$libc"
+fi
+if [[ -n "$LINKER" ]]; then
+    MODE_METADATA="$MODE_METADATA | .linker = \$linker"
+fi
+
+# Build test report URL if base URL is provided
+TEST_REPORT_FILTER=""
+if [[ -n "$TEST_REPORT_BASE_URL" ]]; then
+    TEST_REPORT_FILTER='| .testReport = "\($testReportBase)/test-report-\($mode)-\(.key).json"'
+fi
+
+# Update manifest using jq with new schema supporting multiple build modes
 if ! jq --arg version "$VERSION" \
    --arg date "$CURRENT_DATE" \
    --arg repo "$REPO_NAME" \
+   --arg mode "$BUILD_MODE" \
+   --arg prootCompatible "$PROOT_COMPATIBLE" \
+   --arg libc "$LIBC" \
+   --arg linker "$LINKER" \
+   --arg testReportBase "$TEST_REPORT_BASE_URL" \
+   --arg extension "$FILE_EXTENSION" \
    --argjson checksums "$CHECKSUMS_JSON" '
+  # Update version and date at root level
   .version = $version |
-  .last_updated = $date |
-  .architectures |= with_entries(
-    .value.url = "https://github.com/\($repo)/releases/download/v\($version)/bootstrap-\(.key)-\($version).tar.gz" |
-    .value.checksum = $checksums[.key].checksum |
-    .value.size = $checksums[.key].size
-  )
+  .releaseDate = $date |
+  
+  # Initialize bootstraps object if it does not exist
+  if .bootstraps == null then .bootstraps = {} else . end |
+  
+  # Initialize mode object if it does not exist
+  if .bootstraps[$mode] == null then .bootstraps[$mode] = {} else . end |
+  
+  # Update each architecture within the build mode
+  .bootstraps[$mode] |= (
+    $checksums | to_entries | map({
+      key: .key,
+      value: {
+        url: "https://github.com/\($repo)/releases/download/v\($version)/bootstrap-\($mode)-\(.key)-\($version).\($extension)",
+        sha256: .value.checksum,
+        size: .value.size,
+        buildMode: $mode,
+        prootCompatible: ($prootCompatible == "true")
+      } + (
+        if $libc != "" then {libc: $libc} else {} end
+      ) + (
+        if $linker != "" then {linker: $linker} else {} end
+      ) + (
+        if $testReportBase != "" then {
+          testReport: "\($testReportBase)/test-report-\($mode)-\(.key).json"
+        } else {} end
+      )
+    }) | from_entries
+  ) |
+  
+  # Maintain backward compatibility with old architectures field for android-native
+  if $mode == "android-native" then
+    .architectures = .bootstraps["android-native"]
+  else . end
 ' "$MANIFEST_FILE" > "$TEMP_MANIFEST" 2>/dev/null; then
     log_error "Failed to update manifest using jq"
     log_error "This could be due to invalid JSON structure in the manifest"
@@ -163,9 +259,20 @@ log_info "Manifest updated successfully!"
 echo ""
 log_info "Updated fields:"
 echo "  ✓ version: $VERSION"
-echo "  ✓ last_updated: $CURRENT_DATE"
+echo "  ✓ releaseDate: $CURRENT_DATE"
+echo "  ✓ buildMode: $BUILD_MODE"
+echo "  ✓ prootCompatible: $PROOT_COMPATIBLE"
+if [[ -n "$LIBC" ]]; then
+    echo "  ✓ libc: $LIBC"
+fi
+if [[ -n "$LINKER" ]]; then
+    echo "  ✓ linker: $LINKER"
+fi
 echo "  ✓ URLs for all architectures"
 echo "  ✓ Checksums for all architectures"
 echo "  ✓ Sizes for all architectures"
+if [[ -n "$TEST_REPORT_BASE_URL" ]]; then
+    echo "  ✓ Test report URLs"
+fi
 echo ""
 log_info "Manifest validation: PASSED"

@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "buildMode": "android-native",
+  "architectures": [
+    "arm64-v8a",
+    "armeabi-v7a",
+    "x86_64",
+    "x86"
+  ],
+  "compression": "xz",
+  "stripSymbols": true,
+  "runTests": false,
+  "buildModeInfo": {
+    "static": {
+      "description": "Statically-linked binaries (recommended for PRoot)",
+      "prootCompatible": true,
+      "deprecated": false
+    },
+    "linux-native": {
+      "description": "Dynamically-linked binaries with Linux linker",
+      "prootCompatible": true,
+      "deprecated": false
+    },
+    "android-native": {
+      "description": "Android-native binaries (legacy/deprecated)",
+      "prootCompatible": false,
+      "deprecated": true,
+      "deprecationMessage": "Android-native mode is deprecated. Use 'static' or 'linux-native' for PRoot compatibility."
+    }
+  },
+  "androidNativeOptions": {
+    "termuxRepo": "termux/termux-packages",
+    "downloadDir": "bootstrap-downloads",
+    "note": "Downloads pre-built Termux bootstrap packages"
+  }
+}

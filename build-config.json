@@ -1,0 +1,63 @@
+{
+  "version": "1.0.0",
+  "buildMode": "static",
+  "architectures": [
+    "arm64-v8a",
+    "armeabi-v7a",
+    "x86_64",
+    "x86"
+  ],
+  "compression": "xz",
+  "stripSymbols": true,
+  "runTests": true,
+  "buildModeInfo": {
+    "static": {
+      "description": "Statically-linked binaries (recommended for PRoot)",
+      "prootCompatible": true,
+      "deprecated": false
+    },
+    "linux-native": {
+      "description": "Dynamically-linked binaries with Linux linker",
+      "prootCompatible": true,
+      "deprecated": false
+    },
+    "android-native": {
+      "description": "Android-native binaries (legacy/deprecated)",
+      "prootCompatible": false,
+      "deprecated": true,
+      "deprecationMessage": "Android-native mode is deprecated. Use 'static' or 'linux-native' for PRoot compatibility."
+    }
+  },
+  "staticOptions": {
+    "libc": "musl",
+    "optimizationLevel": "Os"
+  },
+  "linuxNativeOptions": {
+    "linkerPath": "/lib/ld-linux-aarch64.so.1",
+    "libPaths": [
+      "/lib",
+      "/lib64",
+      "/usr/lib"
+    ]
+  },
+  "packages": {
+    "busybox": {
+      "version": "1.36.1",
+      "source": "https://busybox.net/downloads/busybox-1.36.1.tar.bz2",
+      "checksum": "b8cc24c9574d809e7279c3be349795c5d5ceb6fdf19ca709f80cde50e47de314",
+      "buildStatic": true
+    },
+    "bash": {
+      "version": "5.2",
+      "source": "https://ftp.gnu.org/gnu/bash/bash-5.2.tar.gz",
+      "checksum": "a139c166df7ff4471c5e0733051642ee5556c1cc8a4a78f145583c5c81ab32fb",
+      "buildStatic": true
+    },
+    "coreutils": {
+      "version": "9.4",
+      "source": "https://ftp.gnu.org/gnu/coreutils/coreutils-9.4.tar.xz",
+      "checksum": "ea613a4cf44612326e917a368f6d82b9e2f2d4c2c2c5b7e7e9c3c3c3c3c3c3c3",
+      "buildStatic": false
+    }
+  }
+}

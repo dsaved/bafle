@@ -15,6 +15,7 @@ checksums.txt
 checksums.json
 release_notes.md
 temp-validation/
+.cache/
 
 # Test files
 test-workflow.sh
