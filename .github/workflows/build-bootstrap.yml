@@ -15,7 +15,7 @@ on:
       architectures:
         description: 'Architectures to build (comma-separated: arm64-v8a,armeabi-v7a,x86_64,x86)'
         required: false
-        default: 'arm64-v8a,armeabi-v7a,x86_64,x86'
+        default: 'x86_64'
         type: string
       run_tests:
         description: 'Run PRoot compatibility tests'

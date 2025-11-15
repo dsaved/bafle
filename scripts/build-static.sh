@@ -475,11 +475,16 @@ main() {
         log_info "Native compilation (host matches target architecture)"
     fi
     
-    # Export architecture-specific flags
-    local arch_cflags=$(get_arch_cflags "$TARGET_ARCH")
-    if [ -n "$arch_cflags" ]; then
-        export ARCH_CFLAGS="$arch_cflags"
-        log_info "Architecture-specific CFLAGS: $arch_cflags"
+    # Export architecture-specific flags (only if cross-compiling or native match)
+    if [ -n "$CROSS_COMPILE" ] || [ "$host_arch" = "$target_arch" ]; then
+        local arch_cflags=$(get_arch_cflags "$TARGET_ARCH")
+        if [ -n "$arch_cflags" ]; then
+            export ARCH_CFLAGS="$arch_cflags"
+            log_info "Architecture-specific CFLAGS: $arch_cflags"
+        fi
+    else
+        log_warning "Skipping architecture-specific CFLAGS (no cross-compiler available)"
+        export ARCH_CFLAGS=""
     fi
     
     echo ""
