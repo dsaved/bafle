@@ -191,6 +191,33 @@ jobs:
           
           echo "✅ Android-native bootstrap downloaded"
       
+      - name: Organize android-native bootstrap
+        if: ${{ matrix.mode == 'android-native' }}
+        run: |
+          echo "================================================"
+          echo "Step 4/7: Organize Android-Native Bootstrap"
+          echo "================================================"
+          
+          # Move downloaded bootstrap to expected location for packaging
+          BOOTSTRAP_NAME="bootstrap-${BUILD_MODE}-${TARGET_ARCH}-${VERSION}"
+          SOURCE_DIR="bootstrap-downloads/${TARGET_ARCH}"
+          DEST_DIR="build/${BOOTSTRAP_NAME}"
+          
+          echo "Moving bootstrap from $SOURCE_DIR to $DEST_DIR"
+          
+          if [ ! -d "$SOURCE_DIR" ]; then
+            echo "❌ Error: Downloaded bootstrap not found at $SOURCE_DIR"
+            exit 1
+          fi
+          
+          mkdir -p build
+          mv "$SOURCE_DIR" "$DEST_DIR"
+          
+          echo "✅ Bootstrap organized at $DEST_DIR"
+          echo ""
+          echo "Bootstrap structure:"
+          ls -la "$DEST_DIR"
+      
       - name: Assemble bootstrap
         if: ${{ matrix.mode != 'android-native' }}
         run: |
@@ -221,6 +248,23 @@ jobs:
           
           ./scripts/package-archives.sh --version "$VERSION" --mode "$BUILD_MODE" --arch "$TARGET_ARCH"
           
+          # Verify archive structure
+          ARCHIVE_NAME="bootstrap-${BUILD_MODE}-${TARGET_ARCH}-${VERSION}.tar.xz"
+          ARCHIVE_PATH="bootstrap-archives/${ARCHIVE_NAME}"
+          
+          echo ""
+          echo "Verifying archive structure..."
+          
+          # Check for incorrect nested usr/usr/ structure
+          if tar -tJf "$ARCHIVE_PATH" | grep -q "usr/usr/"; then
+            echo "❌ CRITICAL ERROR: Archive contains nested usr/usr/ structure!"
+            echo "This is incorrect and will cause issues."
+            echo "Paths with usr/usr/:"
+            tar -tJf "$ARCHIVE_PATH" | grep "usr/usr/" | head -10
+            exit 1
+          fi
+          
+          echo "✅ Archive structure validated (no nested usr/usr/)"
           echo "✅ Archive packaged"
       
       - name: Generate checksums

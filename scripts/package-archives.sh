@@ -221,7 +221,7 @@ validate_structure() {
         return 1
     fi
     
-    # Check if usr directory exists (or bin at root for some structures)
+    # Check if usr directory exists (or bin at root for android-native)
     if [ ! -d "${bootstrap_dir}/usr" ] && [ ! -d "${bootstrap_dir}/bin" ]; then
         log_error "Neither usr nor bin directory found in $bootstrap_dir"
         return 1
@@ -234,10 +234,21 @@ validate_structure() {
         return 1
     fi
     
-    # Verify critical directories exist
-    if [ -d "${bootstrap_dir}/usr" ] && [ ! -d "${bootstrap_dir}/usr/bin" ]; then
-        log_error "usr/bin directory not found in $arch bootstrap"
-        return 1
+    # Verify critical directories exist based on structure
+    if [ -d "${bootstrap_dir}/usr" ]; then
+        # Standard structure with usr/
+        if [ ! -d "${bootstrap_dir}/usr/bin" ]; then
+            log_error "usr/bin directory not found in $arch bootstrap"
+            return 1
+        fi
+        log_info "Structure: Standard (usr/bin, usr/lib, etc.)"
+    else
+        # Flat structure (android-native)
+        if [ ! -d "${bootstrap_dir}/bin" ]; then
+            log_error "bin directory not found in $arch bootstrap"
+            return 1
+        fi
+        log_info "Structure: Flat (bin, lib, etc. at root)"
     fi
     
     log_info "Directory structure validation passed for $arch"
@@ -251,7 +262,7 @@ set_permissions() {
     
     log_info "Setting permissions for $arch..."
     
-    # Set executable permissions on usr/bin
+    # Set executable permissions on usr/bin (standard structure)
     if [ -d "${bootstrap_dir}/usr/bin" ]; then
         local bin_count=$(ls -1 "${bootstrap_dir}/usr/bin" 2>/dev/null | wc -l | tr -d ' ')
         log_info "Setting executable permissions on $bin_count files in usr/bin/"
@@ -267,12 +278,20 @@ set_permissions() {
         log_info "✓ Executable permissions set on usr/libexec"
     fi
     
-    # Set executable permissions on bin (if exists at root level)
-    if [ -d "${bootstrap_dir}/bin" ]; then
+    # Set executable permissions on bin at root (flat structure - android-native)
+    if [ -d "${bootstrap_dir}/bin" ] && [ ! -d "${bootstrap_dir}/usr" ]; then
         local root_bin_count=$(ls -1 "${bootstrap_dir}/bin" 2>/dev/null | wc -l | tr -d ' ')
         log_info "Setting executable permissions on $root_bin_count files in bin/"
         chmod +x "${bootstrap_dir}/bin"/* 2>/dev/null || true
         log_info "✓ Executable permissions set on bin"
+    fi
+    
+    # Set executable permissions on libexec at root (flat structure)
+    if [ -d "${bootstrap_dir}/libexec" ] && [ ! -d "${bootstrap_dir}/usr" ]; then
+        local libexec_count=$(find "${bootstrap_dir}/libexec" -type f 2>/dev/null | wc -l | tr -d ' ')
+        log_info "Setting executable permissions on $libexec_count files in libexec/"
+        find "${bootstrap_dir}/libexec" -type f -exec chmod +x {} \; 2>/dev/null || true
+        log_info "✓ Executable permissions set on libexec"
     fi
     
     return 0

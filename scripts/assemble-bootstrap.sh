@@ -350,7 +350,7 @@ main() {
     local build_mode=""
     local arch=""
     local version="1.0.0"
-    local output_base_dir="$PROJECT_ROOT/bootstrap-archives"
+    local output_base_dir="$PROJECT_ROOT/build"
     
     # Parse command line arguments
     while [[ $# -gt 0 ]]; do
