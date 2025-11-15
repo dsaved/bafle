@@ -24,16 +24,37 @@ on:
         type: boolean
 
 jobs:
+  # Prepare matrix from comma-separated inputs
+  prepare-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      modes: ${{ steps.set-matrix.outputs.modes }}
+      archs: ${{ steps.set-matrix.outputs.archs }}
+    steps:
+      - name: Set matrix values
+        id: set-matrix
+        run: |
+          # Convert comma-separated strings to JSON arrays
+          MODES=$(echo '${{ inputs.build_modes }}' | jq -R -c 'split(",") | map(gsub("^\\s+|\\s+$";""))')
+          ARCHS=$(echo '${{ inputs.architectures }}' | jq -R -c 'split(",") | map(gsub("^\\s+|\\s+$";""))')
+          
+          echo "modes=$MODES" >> $GITHUB_OUTPUT
+          echo "archs=$ARCHS" >> $GITHUB_OUTPUT
+          
+          echo "Build modes: $MODES"
+          echo "Architectures: $ARCHS"
+  
   # Matrix job to build multiple modes and architectures in parallel
   build-bootstrap:
+    needs: prepare-matrix
     runs-on: ubuntu-latest
     permissions:
       contents: write
     
     strategy:
       matrix:
-        mode: ${{ fromJson(format('["{0}"]', replace(inputs.build_modes, ',', '","'))) }}
-        arch: ${{ fromJson(format('["{0}"]', replace(inputs.architectures, ',', '","'))) }}
+        mode: ${{ fromJson(needs.prepare-matrix.outputs.modes) }}
+        arch: ${{ fromJson(needs.prepare-matrix.outputs.archs) }}
       fail-fast: false
     
     env:
