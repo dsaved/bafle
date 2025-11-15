@@ -73,7 +73,6 @@ extract_busybox_source() {
     fi
     
     log_success "BusyBox source extracted to $extract_dir"
-    echo "$extract_dir"
 }
 
 # Configure BusyBox for static build
@@ -261,7 +260,9 @@ main() {
     echo ""
     
     # Extract source
-    local source_dir=$(extract_busybox_source)
+    extract_busybox_source
+    local version=$(get_package_info "version")
+    local source_dir="$BUILD_DIR/busybox-$version"
     echo ""
     
     # Configure

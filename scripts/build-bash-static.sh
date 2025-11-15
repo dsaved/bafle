@@ -73,16 +73,15 @@ extract_bash_source() {
     fi
     
     log_success "Bash source extracted to $extract_dir"
-    echo "$extract_dir"
 }
 
 # Configure Bash for static build
 configure_bash() {
     local source_dir=$1
     
-    log_info "Configuring Bash for static build..."
+    log_info "Configuring Bash for static build..." >&2
     
-    cd "$source_dir"
+    cd "$source_dir" || { log_error "Failed to cd to $source_dir" >&2; exit 1; }
     
     # Get build configuration
     local libc=$(jq -r '.staticOptions.libc // "musl"' "$CONFIG_FILE")
@@ -287,7 +286,9 @@ main() {
     echo ""
     
     # Extract source
-    local source_dir=$(extract_bash_source)
+    extract_bash_source
+    local version=$(get_package_info "version")
+    local source_dir="$BUILD_DIR/bash-$version"
     echo ""
     
     # Configure
