@@ -10,12 +10,12 @@ on:
       build_modes:
         description: 'Build modes to create (comma-separated: static,linux-native,android-native)'
         required: false
-        default: 'static'
+        default: 'android-native'
         type: string
       architectures:
         description: 'Architectures to build (comma-separated: arm64-v8a,armeabi-v7a,x86_64,x86)'
         required: false
-        default: 'x86_64'
+        default: 'arm64-v8a,armeabi-v7a,x86_64,x86'
         type: string
       run_tests:
         description: 'Run PRoot compatibility tests'

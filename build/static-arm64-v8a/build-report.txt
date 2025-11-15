@@ -1,0 +1,16 @@
+Static Build Report
+===================
+
+Build Date: 2025-11-15 08:52:14 UTC
+Build Directory: /Users/dsaved/Documents/Work/Mobile/mvs-code-architecture/build
+Output Directory: /Users/dsaved/Documents/Work/Mobile/mvs-code-architecture/build/static-arm64-v8a
+
+Configuration:
+  libc: musl
+  Optimization: Os
+
+Built Binaries:
+---------------
+
+Total Size:
+  0B

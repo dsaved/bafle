@@ -1,0 +1,31 @@
+Build Performance Metrics Report
+=================================
+
+Generated: 2025-11-15 08:52:14 UTC
+
+Summary:
+--------
+Total builds: 4
+Successful: 0
+Failed: 4
+Cache hits: 0
+
+Build Times:
+------------
+  ✗ busybox (static, arm64-v8a): 11s - 2025-11-15 08:52:13 UTC
+  ✗ busybox (static, arm64-v8a): 0s - 2025-11-15 08:20:54 UTC
+  ✗ bash (static, arm64-v8a): 3s - 2025-11-15 08:52:02 UTC
+  ✗ bash (static, arm64-v8a): 1s - 2025-11-15 08:20:54 UTC
+
+Performance by Package:
+-----------------------
+  bash: 2 builds
+  busybox: 2 builds
+
+Performance by Mode:
+--------------------
+  static: 4 builds
+
+Cache Efficiency:
+-----------------
+  Cache hit rate: 0% (0/4)
