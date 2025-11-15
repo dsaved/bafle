@@ -108,16 +108,44 @@ jobs:
           echo "================================================"
           
           # Create temporary config for this build
-          cat > build-config-temp.json << EOF
+          cat > build-config-temp.json << 'EOF'
           {
             "version": "$VERSION",
             "buildMode": "$BUILD_MODE",
             "architectures": ["$TARGET_ARCH"],
             "compression": "xz",
             "stripSymbols": true,
-            "runTests": $RUN_TESTS
+            "runTests": $RUN_TESTS,
+            "staticOptions": {
+              "libc": "musl",
+              "optimizationLevel": "Os"
+            },
+            "linuxNativeOptions": {
+              "linkerPath": "/lib/ld-linux-aarch64.so.1",
+              "libPaths": ["/lib", "/lib64", "/usr/lib"]
+            },
+            "packages": {
+              "busybox": {
+                "version": "1.36.1",
+                "source": "https://busybox.net/downloads/busybox-1.36.1.tar.bz2",
+                "checksum": "b8cc24c9574d809e7279c3be349795c5d5ceb6fdf19ca709f80cde50e47de314",
+                "buildStatic": true
+              },
+              "bash": {
+                "version": "5.2",
+                "source": "https://ftp.gnu.org/gnu/bash/bash-5.2.tar.gz",
+                "checksum": "a139c166df7ff4471c5e0733051642ee5556c1cc8a4a78f145583c5c81ab32fb",
+                "buildStatic": true
+              }
+            }
           }
           EOF
+          
+          # Replace placeholders with actual values
+          sed -i "s/\$VERSION/$VERSION/g" build-config-temp.json
+          sed -i "s/\$BUILD_MODE/$BUILD_MODE/g" build-config-temp.json
+          sed -i "s/\$TARGET_ARCH/$TARGET_ARCH/g" build-config-temp.json
+          sed -i "s/\$RUN_TESTS/$RUN_TESTS/g" build-config-temp.json
           
           # Validate configuration
           ./scripts/config-validator.sh build-config-temp.json
