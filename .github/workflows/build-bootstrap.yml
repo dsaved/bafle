@@ -198,7 +198,7 @@ jobs:
                 g++-aarch64-linux-gnu \
                 gcc-arm-linux-gnueabihf \
                 g++-arm-linux-gnueabihf \
-                wget curl make file bzip2 xz-utils \
+                wget curl make file bzip2 xz-utils jq \
                 libc6-dev-arm64-cross \
                 libc6-dev-armhf-cross
               
