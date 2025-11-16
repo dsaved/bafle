@@ -237,6 +237,12 @@ install_busybox() {
     # Create symlinks for all applets
     log_info "Creating symlinks for BusyBox applets..."
     
+    # Get list of applets
+    "$OUTPUT_DIR/bin/busybox" --list > "$OUTPUT_DIR/busybox-applets.txt" 2>/dev/null || {
+        log_error "Failed to get BusyBox applet list"
+        return 1
+    }
+    
     local symlink_count=0
     while IFS= read -r applet; do
         # Skip busybox itself
@@ -245,12 +251,9 @@ install_busybox() {
         # Create symlink
         ln -sf busybox "$OUTPUT_DIR/bin/$applet" 2>/dev/null || true
         ((symlink_count++))
-    done < <("$OUTPUT_DIR/bin/busybox" --list 2>/dev/null)
+    done < "$OUTPUT_DIR/busybox-applets.txt"
     
     log_success "Created $symlink_count symlinks for BusyBox applets"
-    
-    # Create a list of installed applets
-    "$OUTPUT_DIR/bin/busybox" --list > "$OUTPUT_DIR/busybox-applets.txt"
     log_info "Applet list saved to $OUTPUT_DIR/busybox-applets.txt"
 }
 
