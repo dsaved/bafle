@@ -137,16 +137,25 @@ if ! echo "$CHECKSUMS_JSON" | jq empty 2>/dev/null; then
     exit 1
 fi
 
-# Validate that checksums JSON contains all required architectures
-log_info "Checking for required architectures in checksums..."
-required_archs=("arm64-v8a" "armeabi-v7a" "x86_64" "x86")
-for arch in "${required_archs[@]}"; do
-    if ! echo "$CHECKSUMS_JSON" | jq -e ".[\"$arch\"]" > /dev/null 2>&1; then
-        log_error "Missing architecture in checksums JSON: $arch"
-        exit 1
+# Validate that checksums JSON contains at least one architecture
+log_info "Checking architectures in checksums JSON..."
+available_archs=()
+all_archs=("arm64-v8a" "armeabi-v7a" "x86_64" "x86")
+
+for arch in "${all_archs[@]}"; do
+    if echo "$CHECKSUMS_JSON" | jq -e ".[\"$arch\"]" > /dev/null 2>&1; then
+        available_archs+=("$arch")
+        log_info "  ✓ Found: $arch"
     fi
-    log_info "  ✓ Found: $arch"
 done
+
+if [ ${#available_archs[@]} -eq 0 ]; then
+    log_error "No valid architectures found in checksums JSON"
+    log_error "Expected at least one of: ${all_archs[*]}"
+    exit 1
+fi
+
+log_info "Processing ${#available_archs[@]} architecture(s)"
 
 # Create backup of original manifest
 BACKUP_FILE="${MANIFEST_FILE}.backup"
