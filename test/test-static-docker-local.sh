@@ -69,6 +69,7 @@ docker run --rm \
   -e BUILD_MODE="$TEST_MODE" \
   -e TARGET_ARCH="$TEST_ARCH" \
   -e VERSION="$TEST_VERSION" \
+  -e FORCE_UNSAFE_CONFIGURE=1 \
   ubuntu:22.04 \
   bash -c '
     set -e
