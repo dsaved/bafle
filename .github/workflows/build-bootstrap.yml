@@ -174,18 +174,50 @@ jobs:
           
           echo "✅ Sources downloaded and verified"
       
-      - name: Compile binaries
-        if: ${{ matrix.mode != 'android-native' }}
+      - name: Compile binaries (Docker)
+        if: ${{ matrix.mode == 'static' || matrix.mode == 'linux-native' }}
         run: |
           echo "================================================"
-          echo "Step 3/7: Compilation ($BUILD_MODE mode)"
+          echo "Step 3/7: Compilation ($BUILD_MODE mode) - Docker"
           echo "================================================"
           
+          # Create Docker build script
+          cat > /tmp/docker-build.sh << 'DOCKER_EOF'
+          #!/bin/bash
+          set -e
+          
+          # Install dependencies
+          apt-get update
+          apt-get install -y \
+            build-essential \
+            gcc-aarch64-linux-gnu \
+            g++-aarch64-linux-gnu \
+            gcc-arm-linux-gnueabihf \
+            g++-arm-linux-gnueabihf \
+            wget curl make file bzip2 xz-utils \
+            libc6-dev-arm64-cross \
+            libc6-dev-armhf-cross
+          
+          # Run build
+          cd /workspace
           if [ "$BUILD_MODE" = "static" ]; then
             ./scripts/build-static.sh --arch "$TARGET_ARCH" --version "$VERSION"
           elif [ "$BUILD_MODE" = "linux-native" ]; then
             ./scripts/build-linux-native.sh --android-arch "$TARGET_ARCH" --version "$VERSION"
           fi
+          DOCKER_EOF
+          
+          chmod +x /tmp/docker-build.sh
+          
+          # Run build in Docker
+          docker run --rm \
+            -v $(pwd):/workspace \
+            -w /workspace \
+            -e BUILD_MODE="$BUILD_MODE" \
+            -e TARGET_ARCH="$TARGET_ARCH" \
+            -e VERSION="$VERSION" \
+            ubuntu:22.04 \
+            bash /tmp/docker-build.sh
           
           echo "✅ Compilation completed"
       
