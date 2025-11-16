@@ -40,6 +40,16 @@ if ! command -v docker &> /dev/null; then
     exit 1
 fi
 
+# Check if Docker daemon is running
+if ! docker info &> /dev/null; then
+    log_error "Docker daemon is not running"
+    log_error "Please start Docker Desktop or Docker daemon"
+    log_error ""
+    log_error "macOS: Open Docker Desktop application"
+    log_error "Linux: sudo systemctl start docker"
+    exit 1
+fi
+
 log_info "=========================================="
 log_info "Static Build Test (Docker)"
 log_info "=========================================="
@@ -50,7 +60,7 @@ echo ""
 
 cd "$PROJECT_ROOT"
 
-log_info "Running Docker build..."
+log_info "Running Docker build (this may take several minutes)..."
 echo ""
 
 docker run --rm \
