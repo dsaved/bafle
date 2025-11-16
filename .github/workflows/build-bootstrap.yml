@@ -274,16 +274,17 @@ jobs:
           echo "Step 7/7: Checksum Generation"
           echo "================================================"
           
-          cd bootstrap-archives
-          ../scripts/generate-checksums.sh --version "$VERSION" --mode "$BUILD_MODE" --arch "$TARGET_ARCH"
+          ./scripts/generate-checksums.sh \
+            --version "$VERSION" \
+            --mode "$BUILD_MODE" \
+            --arch "$TARGET_ARCH" \
+            --archive-dir bootstrap-archives
           
           # Save checksum data for manifest
-          CHECKSUM_DATA=$(cat "checksums-${BUILD_MODE}-${TARGET_ARCH}.json")
+          CHECKSUM_DATA=$(cat "bootstrap-archives/checksums-${BUILD_MODE}-${TARGET_ARCH}.json")
           echo "checksum_data<<EOF" >> $GITHUB_OUTPUT
           echo "$CHECKSUM_DATA" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-          
-          cd ..
           
           echo "✅ Checksums generated"
       

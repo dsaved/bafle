@@ -132,9 +132,11 @@ step_package() {
 step_checksums() {
     log_step "Step 7/7: Checksum Generation"
     
-    cd bootstrap-archives
-    ../scripts/generate-checksums.sh --version "$VERSION" --mode "$BUILD_MODE" --arch "$TARGET_ARCH"
-    cd ..
+    ./scripts/generate-checksums.sh \
+        --version "$VERSION" \
+        --mode "$BUILD_MODE" \
+        --arch "$TARGET_ARCH" \
+        --archive-dir bootstrap-archives
     
     echo "✅ Checksums generated"
 }

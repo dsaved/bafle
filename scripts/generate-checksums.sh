@@ -114,6 +114,13 @@ log_info "Build mode: $BUILD_MODE"
 log_info "Compression: $COMPRESSION"
 log_info "Archive directory: $ARCHIVE_DIR"
 
+# Ensure archive directory exists
+if [ ! -d "$ARCHIVE_DIR" ]; then
+    log_error "Archive directory not found: $ARCHIVE_DIR"
+    log_error "Please ensure archives have been created before generating checksums"
+    exit 1
+fi
+
 # Get file extension
 EXTENSION=$(get_compression_extension "$COMPRESSION")
 
@@ -231,8 +238,19 @@ echo ""
 log_info "JSON output for manifest update:"
 echo "$JSON_OUTPUT"
 
-# Also save JSON to a file for easier consumption by other scripts
-JSON_FILE="${ARCHIVE_DIR}/checksums.json"
+# Save JSON to mode-specific file for workflow consumption
+if [ -n "$SPECIFIC_ARCH" ]; then
+    # Single architecture - create mode-arch specific file
+    JSON_FILE="${ARCHIVE_DIR}/checksums-${BUILD_MODE}-${SPECIFIC_ARCH}.json"
+    CHECKSUMS_SPECIFIC="${ARCHIVE_DIR}/checksums-${BUILD_MODE}-${SPECIFIC_ARCH}.txt"
+    
+    # Copy the main checksums file to mode-arch specific file
+    cp "$CHECKSUMS_FILE" "$CHECKSUMS_SPECIFIC"
+else
+    # Multiple architectures - create general file
+    JSON_FILE="${ARCHIVE_DIR}/checksums.json"
+fi
+
 if ! echo "$JSON_OUTPUT" > "$JSON_FILE"; then
     log_error "Failed to write $JSON_FILE file"
     exit 1
@@ -242,4 +260,7 @@ echo ""
 log_info "Checksum generation complete!"
 log_info "Generated files:"
 echo "  ✓ $CHECKSUMS_FILE"
+if [ -n "$SPECIFIC_ARCH" ]; then
+    echo "  ✓ $CHECKSUMS_SPECIFIC"
+fi
 echo "  ✓ $JSON_FILE"
