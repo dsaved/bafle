@@ -363,18 +363,29 @@ jobs:
           # Update manifest for each mode/arch combination
           for checksum_file in bootstrap-archives/checksums-*.json; do
             if [ -f "$checksum_file" ]; then
-              # Extract mode and arch from filename
+              # Extract mode and arch from filename (checksums-{mode}-{arch}.json)
               filename=$(basename "$checksum_file")
               MODE_ARCH=$(echo "$filename" | sed 's/checksums-\(.*\)\.json/\1/')
               
-              echo "Updating manifest for: $MODE_ARCH"
+              # Split MODE_ARCH into mode and arch
+              # Format: android-native-arm64-v8a -> mode=android-native, arch=arm64-v8a
+              # We need to handle mode names with hyphens (android-native, linux-native)
+              if [[ "$MODE_ARCH" =~ ^(static|linux-native|android-native)-(.+)$ ]]; then
+                BUILD_MODE="${BASH_REMATCH[1]}"
+                ARCH="${BASH_REMATCH[2]}"
+              else
+                echo "⚠️  Warning: Could not parse mode/arch from: $MODE_ARCH"
+                continue
+              fi
+              
+              echo "Updating manifest for: $BUILD_MODE / $ARCH"
               
               CHECKSUM_DATA=$(cat "$checksum_file")
               
               # Update manifest
-              ./scripts/update-manifest.sh "$VERSION" "$REPO_NAME" "$CHECKSUM_DATA" "$MODE_ARCH" "$TEST_REPORT_BASE"
+              ./scripts/update-manifest.sh "$VERSION" "$REPO_NAME" "$CHECKSUM_DATA" "$BUILD_MODE" "$TEST_REPORT_BASE"
               
-              echo "✅ Manifest updated for $MODE_ARCH"
+              echo "✅ Manifest updated for $BUILD_MODE / $ARCH"
             fi
           done
           
