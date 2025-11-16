@@ -8,9 +8,9 @@ on:
         required: true
         type: string
       build_modes:
-        description: 'Build modes to create (comma-separated: static,linux-native,android-native)'
+        description: 'Build modes (android-native only - static/linux-native require Docker/ARM runners)'
         required: false
-        default: 'android-native'
+        default: 'static'
         type: string
       architectures:
         description: 'Architectures to build (comma-separated: arm64-v8a,armeabi-v7a,x86_64,x86)'
@@ -170,10 +170,29 @@ jobs:
           echo "Step 3/7: Compilation ($BUILD_MODE mode)"
           echo "================================================"
           
-          if [ "$BUILD_MODE" = "static" ]; then
-            ./scripts/build-static.sh --arch "$TARGET_ARCH" --version "$VERSION"
-          elif [ "$BUILD_MODE" = "linux-native" ]; then
-            ./scripts/build-linux-native.sh --android-arch "$TARGET_ARCH" --version "$VERSION"
+          # Check if static/linux-native builds are supported
+          if [ "$BUILD_MODE" = "static" ] || [ "$BUILD_MODE" = "linux-native" ]; then
+            echo "❌ ERROR: Static and linux-native builds are not supported in GitHub Actions"
+            echo ""
+            echo "Reason:"
+            echo "  - Requires cross-compilation toolchains for ARM architectures"
+            echo "  - GitHub runners are x86_64 and cannot natively compile ARM binaries"
+            echo "  - Cross-compilers (aarch64-linux-gnu-gcc, arm-linux-gnueabihf-gcc) not available"
+            echo ""
+            echo "Solutions:"
+            echo "  1. Use 'android-native' mode (recommended, default)"
+            echo "     - Downloads pre-built Termux bootstraps"
+            echo "     - Works on GitHub Actions without compilation"
+            echo ""
+            echo "  2. Build locally with Docker (for static builds)"
+            echo "     - Run: ./test/test-static-build-docker.sh"
+            echo "     - Requires Docker installed locally"
+            echo ""
+            echo "  3. Use self-hosted ARM runners"
+            echo "     - Set up ARM-based GitHub Actions runners"
+            echo ""
+            echo "To fix: Re-run workflow with build_modes='android-native'"
+            exit 1
           fi
           
           echo "✅ Compilation completed"
