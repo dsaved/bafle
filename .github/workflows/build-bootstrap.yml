@@ -198,9 +198,12 @@ jobs:
                 g++-aarch64-linux-gnu \
                 gcc-arm-linux-gnueabihf \
                 g++-arm-linux-gnueabihf \
+                gcc-multilib \
+                g++-multilib \
                 wget curl make file bzip2 xz-utils jq \
                 libc6-dev-arm64-cross \
-                libc6-dev-armhf-cross
+                libc6-dev-armhf-cross \
+                libc6-dev-i386
               
               if [ "$BUILD_MODE" = "static" ]; then
                 ./scripts/build-static.sh --arch "$TARGET_ARCH" --version "$VERSION"
