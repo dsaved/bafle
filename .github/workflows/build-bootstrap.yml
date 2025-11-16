@@ -194,16 +194,18 @@ jobs:
               apt-get update -qq
               apt-get install -y -qq \
                 build-essential \
-                gcc-aarch64-linux-gnu \
-                g++-aarch64-linux-gnu \
-                gcc-arm-linux-gnueabihf \
-                g++-arm-linux-gnueabihf \
-                gcc-multilib \
-                g++-multilib \
-                wget curl make file bzip2 xz-utils jq \
-                libc6-dev-arm64-cross \
-                libc6-dev-armhf-cross \
-                libc6-dev-i386
+                wget curl make file bzip2 xz-utils jq
+              
+              # Install cross-compilers based on architecture
+              if [ "$TARGET_ARCH" = "arm64-v8a" ]; then
+                apt-get install -y -qq gcc-aarch64-linux-gnu g++-aarch64-linux-gnu libc6-dev-arm64-cross
+              elif [ "$TARGET_ARCH" = "armeabi-v7a" ]; then
+                apt-get install -y -qq gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf libc6-dev-armhf-cross
+              elif [ "$TARGET_ARCH" = "x86" ]; then
+                apt-get install -y -qq gcc-multilib g++-multilib libc6-dev-i386
+              elif [ "$TARGET_ARCH" = "x86_64" ]; then
+                apt-get install -y -qq gcc g++
+              fi
               
               if [ "$BUILD_MODE" = "static" ]; then
                 ./scripts/build-static.sh --arch "$TARGET_ARCH" --version "$VERSION"
