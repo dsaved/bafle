@@ -26,7 +26,7 @@ log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 log_info "Extracting Coreutils source..."
 cd "$BUILD_DIR"
 rm -rf coreutils-9.4
-tar -xf "$SOURCE_DIR/coreutils-9.4.tar.xz"
+tar -xf "$SOURCE_DIR/coreutils/coreutils-9.4.tar.xz"
 log_success "Coreutils source extracted to $BUILD_DIR/coreutils-9.4"
 
 cd coreutils-9.4

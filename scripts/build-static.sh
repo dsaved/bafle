@@ -515,6 +515,15 @@ main() {
     log_info "Packages to build: ${packages_to_build[*]}"
     echo ""
     
+    # Download sources if not already cached
+    log_info "Downloading source packages..."
+    if bash "$SCRIPT_DIR/download-sources.sh"; then
+        log_success "Source packages downloaded"
+    else
+        log_warning "Some sources may not have downloaded, continuing anyway..."
+    fi
+    echo ""
+    
     # Build packages
     local failed_packages=()
     for package in "${packages_to_build[@]}"; do
