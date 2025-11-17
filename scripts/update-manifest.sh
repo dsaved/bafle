@@ -214,24 +214,25 @@ JQ_OUTPUT=$(jq --arg version "$VERSION" \
   
   # Update each architecture within the build mode
   .bootstraps[$mode] |= (
-    $checksums | to_entries | map({
-      key: .key,
-      value: {
-        url: "https://github.com/\($repo)/releases/download/v\($version)/bootstrap-\($mode)-\(.key)-\($version).\($extension)",
-        sha256: .value.checksum,
-        size: .value.size,
-        buildMode: $mode,
-        prootCompatible: ($prootCompatible == "true")
-      } + (
-        if $libc != "" then {libc: $libc} else {} end
-      ) + (
-        if $linker != "" then {linker: $linker} else {} end
-      ) + (
-        if $testReportBase != "" then {
-          testReport: "\($testReportBase)/test-report-\($mode)-\(.key).json"
-        } else {} end
-      )
-    }) | from_entries
+    $checksums | to_entries | map(
+      .key as $arch |
+      .value as $data |
+      {
+        key: $arch,
+        value: (
+          {
+            url: "https://github.com/\($repo)/releases/download/v\($version)/bootstrap-\($mode)-\($arch)-\($version).\($extension)",
+            sha256: $data.checksum,
+            size: $data.size,
+            buildMode: $mode,
+            prootCompatible: ($prootCompatible == "true")
+          } |
+          if $libc != "" then . + {libc: $libc} else . end |
+          if $linker != "" then . + {linker: $linker} else . end |
+          if $testReportBase != "" then . + {testReport: "\($testReportBase)/test-report-\($mode)-\($arch).json"} else . end
+        )
+      }
+    ) | from_entries
   ) |
   
   # Maintain backward compatibility with old architectures field for android-native
