@@ -243,6 +243,7 @@ main() {
         
         if verify_proot "$OUTPUT_PATH"; then
             log_success "Using existing PRoot binary"
+            # Output the path for use by other scripts (MUST BE LAST LINE)
             echo "$OUTPUT_PATH"
             exit 0
         else
@@ -263,10 +264,10 @@ main() {
         exit 1
     fi
     
-    # Output the path for use by other scripts
-    echo "$OUTPUT_PATH"
-    
     log_success "PRoot setup complete!"
+    
+    # Output the path for use by other scripts (MUST BE LAST LINE)
+    echo "$OUTPUT_PATH"
     exit 0
 }
 
