@@ -36,8 +36,14 @@ create_symlink() {
     local link_name=$2
     local link_dir=$(dirname "$link_name")
     
-    # Create directory if it doesn't exist
+    # Create parent directory if it doesn't exist
     mkdir -p "$link_dir"
+    
+    # If link_name exists as a directory, remove it
+    if [ -d "$link_name" ] && [ ! -L "$link_name" ]; then
+        log_warning "  Removing existing directory: $link_name"
+        rm -rf "$link_name"
+    fi
     
     # Remove existing symlink or file if it exists
     if [ -e "$link_name" ] || [ -L "$link_name" ]; then
@@ -45,9 +51,13 @@ create_symlink() {
     fi
     
     # Create symlink
-    ln -s "$target" "$link_name"
+    if ! ln -s "$target" "$link_name" 2>/dev/null; then
+        log_error "  Failed to create symlink: $link_name -> $target"
+        return 1
+    fi
     
     log_info "  Created: $(basename "$link_name") -> $target"
+    return 0
 }
 
 # Create shell symlinks
@@ -58,17 +68,19 @@ create_shell_symlinks() {
     
     # sh -> bash (if bash exists)
     if [ -f "$bin_dir/bash" ]; then
-        create_symlink "bash" "$bin_dir/sh"
+        create_symlink "bash" "$bin_dir/sh" || return 1
     elif [ -f "$bin_dir/dash" ]; then
-        create_symlink "dash" "$bin_dir/sh"
+        create_symlink "dash" "$bin_dir/sh" || return 1
     else
         log_warning "No bash or dash found, cannot create sh symlink"
     fi
     
     # rbash -> bash (restricted bash)
     if [ -f "$bin_dir/bash" ]; then
-        create_symlink "bash" "$bin_dir/rbash"
+        create_symlink "bash" "$bin_dir/rbash" || return 1
     fi
+    
+    return 0
 }
 
 # Create BusyBox symlinks
@@ -178,14 +190,16 @@ create_lib_symlinks() {
     
     # lib64 -> lib (for 64-bit architectures)
     if [ -d "$usr_dir/lib" ]; then
-        create_symlink "lib" "$usr_dir/lib64"
+        create_symlink "lib" "$usr_dir/lib64" || return 1
     fi
     
     # Create /lib -> usr/lib symlink at root level
     if [ -d "$usr_dir/lib" ]; then
-        create_symlink "usr/lib" "$BOOTSTRAP_DIR/lib"
-        create_symlink "usr/lib" "$BOOTSTRAP_DIR/lib64"
+        create_symlink "usr/lib" "$BOOTSTRAP_DIR/lib" || return 1
+        create_symlink "usr/lib" "$BOOTSTRAP_DIR/lib64" || return 1
     fi
+    
+    return 0
 }
 
 # Create bin directory symlinks
@@ -196,13 +210,15 @@ create_bin_symlinks() {
     
     # Create /bin -> usr/bin symlink at root level
     if [ -d "$usr_dir/bin" ]; then
-        create_symlink "usr/bin" "$BOOTSTRAP_DIR/bin"
+        create_symlink "usr/bin" "$BOOTSTRAP_DIR/bin" || return 1
     fi
     
     # Create /sbin -> usr/bin symlink
     if [ -d "$usr_dir/bin" ]; then
-        create_symlink "usr/bin" "$BOOTSTRAP_DIR/sbin"
+        create_symlink "usr/bin" "$BOOTSTRAP_DIR/sbin" || return 1
     fi
+    
+    return 0
 }
 
 # Create etc directory symlinks
@@ -211,8 +227,10 @@ create_etc_symlinks() {
     
     # Create /etc -> usr/etc symlink at root level
     if [ -d "$BOOTSTRAP_DIR/usr/etc" ]; then
-        create_symlink "usr/etc" "$BOOTSTRAP_DIR/etc"
+        create_symlink "usr/etc" "$BOOTSTRAP_DIR/etc" || return 1
     fi
+    
+    return 0
 }
 
 # Create tmp directory symlinks
@@ -221,8 +239,10 @@ create_tmp_symlinks() {
     
     # Create /tmp -> usr/tmp symlink at root level
     if [ -d "$BOOTSTRAP_DIR/usr/tmp" ]; then
-        create_symlink "usr/tmp" "$BOOTSTRAP_DIR/tmp"
+        create_symlink "usr/tmp" "$BOOTSTRAP_DIR/tmp" || return 1
     fi
+    
+    return 0
 }
 
 # Create var directory symlinks
@@ -231,8 +251,10 @@ create_var_symlinks() {
     
     # Create /var -> usr/var symlink at root level
     if [ -d "$BOOTSTRAP_DIR/usr/var" ]; then
-        create_symlink "usr/var" "$BOOTSTRAP_DIR/var"
+        create_symlink "usr/var" "$BOOTSTRAP_DIR/var" || return 1
     fi
+    
+    return 0
 }
 
 # Create common utility symlinks
@@ -243,18 +265,20 @@ create_utility_symlinks() {
     
     # awk -> gawk (if gawk exists)
     if [ -f "$bin_dir/gawk" ] && [ ! -f "$bin_dir/awk" ]; then
-        create_symlink "gawk" "$bin_dir/awk"
+        create_symlink "gawk" "$bin_dir/awk" || return 1
     fi
     
     # vi -> vim (if vim exists)
     if [ -f "$bin_dir/vim" ] && [ ! -f "$bin_dir/vi" ]; then
-        create_symlink "vim" "$bin_dir/vi"
+        create_symlink "vim" "$bin_dir/vi" || return 1
     fi
     
     # python -> python3 (if python3 exists)
     if [ -f "$bin_dir/python3" ] && [ ! -f "$bin_dir/python" ]; then
-        create_symlink "python3" "$bin_dir/python"
+        create_symlink "python3" "$bin_dir/python" || return 1
     fi
+    
+    return 0
 }
 
 # Create library symlinks for common library names
@@ -274,9 +298,11 @@ create_library_version_symlinks() {
         
         # Create .so symlink if it doesn't exist
         if [ ! -e "$lib_dir/$base_name" ]; then
-            create_symlink "$lib_name" "$lib_dir/$base_name"
+            create_symlink "$lib_name" "$lib_dir/$base_name" || true
         fi
     done || true
+    
+    return 0
 }
 
 # Show usage information
