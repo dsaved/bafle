@@ -163,10 +163,13 @@ main() {
     parse_args "$@"
     
     # Determine bootstrap directory
-    BOOTSTRAP_DIR="$PROJECT_ROOT/build/${BUILD_MODE}/bootstrap-${BUILD_MODE}-${TARGET_ARCH}-${VERSION}"
+    BOOTSTRAP_DIR="$PROJECT_ROOT/build/bootstrap-${BUILD_MODE}-${TARGET_ARCH}-${VERSION}"
     
     if [[ ! -d "$BOOTSTRAP_DIR" ]]; then
         log_error "Bootstrap directory not found: $BOOTSTRAP_DIR"
+        log_info "Looking for bootstrap in: $BOOTSTRAP_DIR"
+        log_info "Available directories in build/:"
+        ls -la "$PROJECT_ROOT/build/" 2>/dev/null || true
         exit 1
     fi
     
