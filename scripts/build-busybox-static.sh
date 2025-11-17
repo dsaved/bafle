@@ -138,7 +138,12 @@ build_busybox() {
     # Add architecture-specific flags
     if [ -n "$ARCH_CFLAGS" ]; then
         cflags="$cflags $ARCH_CFLAGS"
+        # Also add to ldflags for proper linking (especially for -m32)
+        ldflags="$ldflags $ARCH_CFLAGS"
     fi
+    
+    # Set linker to match compiler for cross-compilation
+    local ld="$cc"
     
     log_info "Compiler: $cc"
     log_info "CFLAGS: $cflags"
@@ -148,9 +153,10 @@ build_busybox() {
     local num_cores=$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
     log_info "Building with $num_cores parallel jobs..."
     
-    # Build BusyBox
+    # Build BusyBox - use CC for both compiling and linking
     if make -j"$num_cores" \
         CC="$cc" \
+        LD="$ld" \
         CFLAGS="$cflags" \
         LDFLAGS="$ldflags" \
         EXTRA_CFLAGS="$cflags" \

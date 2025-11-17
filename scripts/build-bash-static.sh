@@ -184,6 +184,8 @@ build_bash() {
     # Add architecture-specific flags
     if [ -n "$ARCH_CFLAGS" ]; then
         cflags="$cflags $ARCH_CFLAGS"
+        # Also add to ldflags for proper linking (especially for -m32)
+        ldflags="$ldflags $ARCH_CFLAGS"
     fi
     
     # Build with multiple cores
