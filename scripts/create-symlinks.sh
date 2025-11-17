@@ -105,15 +105,25 @@ create_busybox_symlinks() {
         return 0
     fi
     
-    local created_count=0
+    # Create symlinks using a more reliable method
+    # Filter out busybox itself and empty lines, then create symlinks
+    local temp_applets="/tmp/busybox-applets-$$.txt"
+    echo "$applets" | grep -v "^busybox$" | grep -v "^$" > "$temp_applets"
     
-    # Create symlinks for each applet (only if binary doesn't already exist)
+    local created_count=0
     while IFS= read -r applet; do
         if [ -n "$applet" ] && [ ! -f "$bin_dir/$applet" ]; then
-            create_symlink "busybox" "$bin_dir/$applet"
+            ln -sf busybox "$bin_dir/$applet" 2>/dev/null || true
             ((created_count++))
+            
+            # Log progress every 50 applets to avoid too much output
+            if [ $((created_count % 50)) -eq 0 ]; then
+                log_info "  Progress: $created_count symlinks created..."
+            fi
         fi
-    done <<< "$applets"
+    done < "$temp_applets"
+    
+    rm -f "$temp_applets"
     
     log_success "Created $created_count BusyBox applet symlinks"
 }
