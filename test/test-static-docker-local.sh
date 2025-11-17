@@ -63,7 +63,19 @@ cd "$PROJECT_ROOT"
 log_info "Running Docker build (this may take several minutes)..."
 echo ""
 
+# Determine Docker platform based on target architecture
+DOCKER_PLATFORM="linux/amd64"  # Default to x86_64 for most builds
+if [ "$TEST_ARCH" = "arm64-v8a" ]; then
+    DOCKER_PLATFORM="linux/arm64"
+elif [ "$TEST_ARCH" = "armeabi-v7a" ]; then
+    DOCKER_PLATFORM="linux/arm/v7"
+fi
+
+log_info "Using Docker platform: $DOCKER_PLATFORM"
+echo ""
+
 docker run --rm \
+  --platform "$DOCKER_PLATFORM" \
   -v $(pwd):/workspace \
   -w /workspace \
   -e BUILD_MODE="$TEST_MODE" \
