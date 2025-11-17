@@ -57,7 +57,18 @@ rm -rf build/busybox-* build/static-${TEST_ARCH}
 log_info "Running BusyBox build in Docker..."
 echo ""
 
+# Determine Docker platform - use amd64 for x86/x86_64 to get multilib support
+ARCH_PLATFORM="linux/amd64"
+if [ "$TEST_ARCH" = "arm64-v8a" ]; then
+  ARCH_PLATFORM="linux/arm64"
+elif [ "$TEST_ARCH" = "armeabi-v7a" ]; then
+  ARCH_PLATFORM="linux/arm/v7"
+fi
+
+log_info "Using Docker platform: $ARCH_PLATFORM"
+
 docker run --rm \
+  --platform "$ARCH_PLATFORM" \
   -v $(pwd):/workspace \
   -w /workspace \
   -e TARGET_ARCH="$TEST_ARCH" \
