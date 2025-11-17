@@ -82,11 +82,26 @@ create_busybox_symlinks() {
     
     log_info "Creating BusyBox symlinks..."
     
-    # Get list of applets from busybox
-    local applets=$("$bin_dir/busybox" --list 2>/dev/null || true)
+    # Try to get list of applets from busybox-applets.txt file first
+    local applets_file=""
+    if [ -f "$BOOTSTRAP_DIR/busybox-applets.txt" ]; then
+        applets_file="$BOOTSTRAP_DIR/busybox-applets.txt"
+    elif [ -f "$bin_dir/../busybox-applets.txt" ]; then
+        applets_file="$bin_dir/../busybox-applets.txt"
+    fi
+    
+    local applets=""
+    if [ -n "$applets_file" ]; then
+        applets=$(cat "$applets_file")
+        log_info "Using applet list from: $applets_file"
+    else
+        # Fallback: try to execute busybox (may fail for cross-compiled binaries)
+        applets=$("$bin_dir/busybox" --list 2>/dev/null || true)
+    fi
     
     if [ -z "$applets" ]; then
         log_warning "Could not get BusyBox applet list"
+        log_warning "Symlinks will need to be created manually or during first boot"
         return 0
     fi
     

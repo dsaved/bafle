@@ -456,6 +456,12 @@ main() {
         log_error "Failed to install binaries"
         exit 1
     fi
+    
+    # Copy busybox-applets.txt if it exists (needed for symlink creation)
+    if [ -f "$source_bin_dir/../busybox-applets.txt" ]; then
+        cp "$source_bin_dir/../busybox-applets.txt" "$bootstrap_dir/busybox-applets.txt"
+        log_info "Copied BusyBox applets list"
+    fi
     echo ""
     
     # Install libraries (for linux-native mode)
