@@ -19,3 +19,4 @@ temp-validation/
 
 # Test files
 test-workflow.sh
+build/
