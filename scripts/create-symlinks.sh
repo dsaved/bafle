@@ -131,22 +131,43 @@ create_busybox_symlinks() {
     fi
     
     local created_count=0
-    while IFS= read -r applet; do
-        if [ -n "$applet" ] && [ ! -f "$bin_dir/$applet" ]; then
-            if ln -sf busybox "$bin_dir/$applet" 2>/dev/null; then
-                ((created_count++))
-                
-                # Log progress every 50 applets to avoid too much output
-                if [ $((created_count % 50)) -eq 0 ]; then
-                    log_info "  Progress: $created_count symlinks created..."
-                fi
+    local failed_count=0
+    
+    # Read applets and create symlinks
+    while IFS= read -r applet || [ -n "$applet" ]; do
+        # Skip empty lines
+        [ -z "$applet" ] && continue
+        
+        # Skip if file already exists
+        if [ -f "$bin_dir/$applet" ]; then
+            continue
+        fi
+        
+        # Try to create symlink
+        if ln -sf busybox "$bin_dir/$applet" 2>/dev/null; then
+            ((created_count++))
+            
+            # Log progress every 50 applets to avoid too much output
+            if [ $((created_count % 50)) -eq 0 ]; then
+                log_info "  Progress: $created_count symlinks created..."
             fi
+        else
+            ((failed_count++))
+            log_warning "  Failed to create symlink for: $applet"
         fi
     done < "$temp_applets"
     
     rm -f "$temp_applets"
     
+    if [ $created_count -eq 0 ] && [ $failed_count -gt 0 ]; then
+        log_error "Failed to create any symlinks ($failed_count failures)"
+        return 1
+    fi
+    
     log_success "Created $created_count BusyBox applet symlinks"
+    if [ $failed_count -gt 0 ]; then
+        log_warning "Failed to create $failed_count symlinks"
+    fi
 }
 
 # Create library directory symlinks
@@ -300,32 +321,59 @@ main() {
     log_info "Creating symlinks in: $BOOTSTRAP_DIR"
     echo ""
     
-    # Create all symlinks
-    create_shell_symlinks
+    # Create all symlinks with error handling
+    if ! create_shell_symlinks; then
+        log_error "Failed to create shell symlinks"
+        exit 1
+    fi
     echo ""
     
-    create_busybox_symlinks
+    if ! create_busybox_symlinks; then
+        log_error "Failed to create BusyBox symlinks"
+        exit 1
+    fi
     echo ""
     
-    create_utility_symlinks
+    if ! create_utility_symlinks; then
+        log_error "Failed to create utility symlinks"
+        exit 1
+    fi
     echo ""
     
-    create_lib_symlinks
+    if ! create_lib_symlinks; then
+        log_error "Failed to create library symlinks"
+        exit 1
+    fi
     echo ""
     
-    create_bin_symlinks
+    if ! create_bin_symlinks; then
+        log_error "Failed to create bin symlinks"
+        exit 1
+    fi
     echo ""
     
-    create_etc_symlinks
+    if ! create_etc_symlinks; then
+        log_error "Failed to create etc symlinks"
+        exit 1
+    fi
     echo ""
     
-    create_tmp_symlinks
+    if ! create_tmp_symlinks; then
+        log_error "Failed to create tmp symlinks"
+        exit 1
+    fi
     echo ""
     
-    create_var_symlinks
+    if ! create_var_symlinks; then
+        log_error "Failed to create var symlinks"
+        exit 1
+    fi
     echo ""
     
-    create_library_version_symlinks
+    if ! create_library_version_symlinks; then
+        log_error "Failed to create library version symlinks"
+        exit 1
+    fi
     echo ""
     
     # Count total symlinks created
