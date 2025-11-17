@@ -190,12 +190,13 @@ build_bash() {
     local num_cores=$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
     log_info "Building with $num_cores parallel jobs..."
     
+    # Export variables so sub-makes inherit them
+    export CC="$cc"
+    export CFLAGS="$cflags"
+    export LDFLAGS="$ldflags"
+    
     # Build Bash
-    if make -j"$num_cores" \
-        CC="$cc" \
-        CFLAGS="$cflags" \
-        LDFLAGS="$ldflags" \
-        > "$BUILD_DIR/bash-build.log" 2>&1; then
+    if make -j"$num_cores" > "$BUILD_DIR/bash-build.log" 2>&1; then
         log_success "Bash built successfully"
     else
         log_error "Bash build failed"

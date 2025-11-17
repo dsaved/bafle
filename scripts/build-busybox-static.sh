@@ -242,7 +242,7 @@ install_busybox() {
         log_warning "Cannot execute busybox binary (cross-compiled?)"
         log_warning "Skipping symlink creation - will be created during bootstrap assembly"
         return 0
-    }
+    fi
     
     local symlink_count=0
     while IFS= read -r applet; do
