@@ -86,14 +86,19 @@ create_busybox_symlinks() {
     local applets_file=""
     if [ -f "$BOOTSTRAP_DIR/busybox-applets.txt" ]; then
         applets_file="$BOOTSTRAP_DIR/busybox-applets.txt"
+        log_info "Found applets file: $applets_file"
     elif [ -f "$bin_dir/../busybox-applets.txt" ]; then
         applets_file="$bin_dir/../busybox-applets.txt"
+        log_info "Found applets file: $applets_file"
+    else
+        log_info "No applets file found, will try to execute busybox"
     fi
     
     local applets=""
     if [ -n "$applets_file" ]; then
-        applets=$(cat "$applets_file")
+        applets=$(cat "$applets_file" 2>/dev/null || true)
         log_info "Using applet list from: $applets_file"
+        log_info "Applet count: $(echo "$applets" | wc -l | tr -d ' ')"
     else
         # Fallback: try to execute busybox (may fail for cross-compiled binaries)
         applets=$("$bin_dir/busybox" --list 2>/dev/null || true)
@@ -108,17 +113,33 @@ create_busybox_symlinks() {
     # Create symlinks using a more reliable method
     # Filter out busybox itself and empty lines, then create symlinks
     local temp_applets="/tmp/busybox-applets-$$.txt"
-    echo "$applets" | grep -v "^busybox$" | grep -v "^$" > "$temp_applets"
+    
+    # Write applets to temp file, filtering out busybox and empty lines
+    if [ -n "$applets_file" ]; then
+        # Read from file
+        grep -v "^busybox$" "$applets_file" | grep -v "^$" > "$temp_applets" || true
+    else
+        # Use applets variable
+        echo "$applets" | grep -v "^busybox$" | grep -v "^$" > "$temp_applets" || true
+    fi
+    
+    # Check if temp file has content
+    if [ ! -s "$temp_applets" ]; then
+        log_warning "No applets found to create symlinks"
+        rm -f "$temp_applets"
+        return 0
+    fi
     
     local created_count=0
     while IFS= read -r applet; do
         if [ -n "$applet" ] && [ ! -f "$bin_dir/$applet" ]; then
-            ln -sf busybox "$bin_dir/$applet" 2>/dev/null || true
-            ((created_count++))
-            
-            # Log progress every 50 applets to avoid too much output
-            if [ $((created_count % 50)) -eq 0 ]; then
-                log_info "  Progress: $created_count symlinks created..."
+            if ln -sf busybox "$bin_dir/$applet" 2>/dev/null; then
+                ((created_count++))
+                
+                # Log progress every 50 applets to avoid too much output
+                if [ $((created_count % 50)) -eq 0 ]; then
+                    log_info "  Progress: $created_count symlinks created..."
+                fi
             fi
         fi
     done < "$temp_applets"
