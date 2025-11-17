@@ -190,7 +190,9 @@ if [[ -n "$TEST_REPORT_BASE_URL" ]]; then
 fi
 
 # Update manifest using jq with new schema supporting multiple build modes
-JQ_ERROR=$(jq --arg version "$VERSION" \
+# Temporarily disable exit on error to capture jq output
+set +e
+JQ_OUTPUT=$(jq --arg version "$VERSION" \
    --arg date "$CURRENT_DATE" \
    --arg repo "$REPO_NAME" \
    --arg mode "$BUILD_MODE" \
@@ -236,19 +238,23 @@ JQ_ERROR=$(jq --arg version "$VERSION" \
   if $mode == "android-native" then
     .architectures = .bootstraps["android-native"]
   else . end
-' "$MANIFEST_FILE" > "$TEMP_MANIFEST" 2>&1)
+' "$MANIFEST_FILE" 2>&1)
 
 JQ_EXIT_CODE=$?
+set -e  # Re-enable exit on error
 
 if [ $JQ_EXIT_CODE -ne 0 ]; then
     log_error "Failed to update manifest using jq (exit code: $JQ_EXIT_CODE)"
     log_error "JQ Error output:"
-    echo "$JQ_ERROR"
+    echo "$JQ_OUTPUT"
     log_error "Checksums JSON:"
     echo "$CHECKSUMS_JSON" | jq . 2>&1 || echo "$CHECKSUMS_JSON"
     rm -f "$TEMP_MANIFEST"
     exit 1
 fi
+
+# Write output to temp file
+echo "$JQ_OUTPUT" > "$TEMP_MANIFEST"
 
 # Validate the updated JSON syntax
 log_info "Validating updated manifest JSON syntax..."
