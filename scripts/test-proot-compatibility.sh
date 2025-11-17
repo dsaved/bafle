@@ -82,9 +82,30 @@ setup_proot() {
     local exit_code=$?
     
     if [[ $exit_code -ne 0 ]]; then
-        log_error "Failed to setup PRoot"
-        echo "$setup_output" >&2
-        return 1
+        log_error "Failed to setup PRoot (exit code: $exit_code)"
+        log_error "Setup script output:"
+        echo "$setup_output"
+        log_error "Attempting to install PRoot via apt-get..."
+        
+        # Try to install PRoot as fallback
+        if command -v apt-get &> /dev/null; then
+            if sudo apt-get install -y proot &> /dev/null; then
+                log_info "PRoot installed successfully"
+                # Try setup again
+                setup_output=$("$SCRIPT_DIR/setup-test-proot.sh" --arch "$TARGET_ARCH" 2>&1)
+                exit_code=$?
+                if [[ $exit_code -ne 0 ]]; then
+                    log_error "Setup still failed after installing PRoot"
+                    echo "$setup_output"
+                    return 1
+                fi
+            else
+                log_error "Failed to install PRoot via apt-get"
+                return 1
+            fi
+        else
+            return 1
+        fi
     fi
     
     # Extract the path (last line of output)
@@ -94,6 +115,8 @@ setup_proot() {
     # Validate the path
     if [[ ! -f "$proot_path" ]] || [[ ! -x "$proot_path" ]]; then
         log_error "PRoot binary not found or not executable: $proot_path"
+        log_error "Full setup output:"
+        echo "$setup_output"
         return 1
     fi
     
