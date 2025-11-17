@@ -250,26 +250,15 @@ install_busybox() {
         return 0
     fi
     
-    local symlink_count=0
     local total_applets=$(wc -l < "$OUTPUT_DIR/busybox-applets.txt" | tr -d ' ')
     log_info "Creating symlinks for $total_applets applets..."
     
-    # Use a more efficient approach - read all at once and create symlinks
-    while IFS= read -r applet; do
-        # Skip busybox itself and empty lines
-        [ -z "$applet" ] && continue
-        [ "$applet" = "busybox" ] && continue
-        
-        # Create symlink
-        if ln -sf busybox "$OUTPUT_DIR/bin/$applet" 2>/dev/null; then
-            ((symlink_count++))
-        fi
-        
-        # Progress indicator every 100 applets
-        if [ $((symlink_count % 100)) -eq 0 ] && [ $symlink_count -gt 0 ]; then
-            log_info "Progress: $symlink_count/$total_applets symlinks created..."
-        fi
-    done < "$OUTPUT_DIR/busybox-applets.txt"
+    # Use xargs for faster symlink creation (avoids slow while loop in Docker)
+    grep -v "^busybox$" "$OUTPUT_DIR/busybox-applets.txt" | \
+        xargs -I {} ln -sf busybox "$OUTPUT_DIR/bin/{}" 2>/dev/null || true
+    
+    # Count created symlinks
+    local symlink_count=$(find "$OUTPUT_DIR/bin" -type l | wc -l | tr -d ' ')
     
     log_success "Created $symlink_count symlinks for BusyBox applets"
     log_info "Applet list saved to $OUTPUT_DIR/busybox-applets.txt"
