@@ -21,6 +21,7 @@ TARGET_ARCH=""
 VERSION=""
 BOOTSTRAP_DIR=""
 OUTPUT_DIR="$PROJECT_ROOT/test-results"
+PROOT_BIN=""
 
 # Test counters
 TESTS_RUN=0
@@ -74,12 +75,20 @@ parse_args() {
 setup_proot() {
     log_info "Setting up PRoot for testing..."
     
-    if ! "$SCRIPT_DIR/setup-test-proot.sh" --arch "$TARGET_ARCH"; then
+    # Capture the PRoot binary path from setup script
+    local proot_path
+    proot_path=$("$SCRIPT_DIR/setup-test-proot.sh" --arch "$TARGET_ARCH" 2>&1 | tail -1)
+    
+    if [[ ! -f "$proot_path" ]]; then
         log_error "Failed to setup PRoot"
         return 1
     fi
     
+    # Store the path for use in tests
+    PROOT_BIN="$proot_path"
+    
     log_info "PRoot setup complete"
+    log_info "PRoot binary: $PROOT_BIN"
 }
 
 # Run test command
@@ -105,29 +114,29 @@ run_test() {
 test_bootstrap() {
     log_info "Testing bootstrap: $BOOTSTRAP_DIR"
     
-    # Determine PRoot binary location
-    local proot_bin="$PROJECT_ROOT/.cache/proot-${TARGET_ARCH}"
-    
-    if [[ ! -f "$proot_bin" ]]; then
-        log_error "PRoot binary not found: $proot_bin"
+    # Use the PRoot binary path from setup
+    if [[ -z "$PROOT_BIN" ]] || [[ ! -f "$PROOT_BIN" ]]; then
+        log_error "PRoot binary not available: $PROOT_BIN"
         return 1
     fi
     
+    log_info "Using PRoot: $PROOT_BIN"
+    
     # Basic tests
     run_test "Shell execution" \
-        "$proot_bin -r '$BOOTSTRAP_DIR' /usr/bin/sh -c 'echo test'"
+        "$PROOT_BIN -r '$BOOTSTRAP_DIR' /usr/bin/sh -c 'echo test'"
     
     run_test "Bash version" \
-        "$proot_bin -r '$BOOTSTRAP_DIR' /usr/bin/bash --version"
+        "$PROOT_BIN -r '$BOOTSTRAP_DIR' /usr/bin/bash --version"
     
     run_test "List binaries" \
-        "$proot_bin -r '$BOOTSTRAP_DIR' /usr/bin/ls /usr/bin"
+        "$PROOT_BIN -r '$BOOTSTRAP_DIR' /usr/bin/ls /usr/bin"
     
     run_test "File operations" \
-        "$proot_bin -r '$BOOTSTRAP_DIR' /usr/bin/sh -c 'echo test > /tmp/test.txt && cat /tmp/test.txt'"
+        "$PROOT_BIN -r '$BOOTSTRAP_DIR' /usr/bin/sh -c 'echo test > /tmp/test.txt && cat /tmp/test.txt'"
     
     run_test "Environment variables" \
-        "$proot_bin -r '$BOOTSTRAP_DIR' /usr/bin/sh -c 'export TEST=value && echo \$TEST'"
+        "$PROOT_BIN -r '$BOOTSTRAP_DIR' /usr/bin/sh -c 'export TEST=value && echo \$TEST'"
     
     return 0
 }
