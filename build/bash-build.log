@@ -1,0 +1,1194 @@
+make[1]: warning: -j10 forced in submake: resetting jobserver mode.
+make[1]: Entering directory '/workspace/build/bash-5.2/builtins'
+rm -f mkbuiltins.o
+gcc -c  -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a  mkbuiltins.c
+rm -f mksyntax
+gcc -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib    -Os -ffunction-sections -fdata-sections -static -march=armv8-a  -static -s -Wl,--gc-sections -rdynamic -Os -ffunction-sections -fdata-sections -static -march=armv8-a  -o mksyntax ./mksyntax.c 
+rm -f mksignames.o
+rm -f buildsignames.o
+gcc -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib    -Os -ffunction-sections -fdata-sections -static -march=armv8-a  -DBUILDTOOL -c ./support/mksignames.c
+gcc -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib    -Os -ffunction-sections -fdata-sections -static -march=armv8-a  -DBUILDTOOL -o buildsignames.o -c ./support/signames.c
+rm -f input.o
+rm -f unwind_prot.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c input.c
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c unwind_prot.c
+rm -f pathexp.o
+rm -f test.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c pathexp.c
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c test.c
+rm -f alias.o
+rm -f array.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c alias.c
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c array.c
+rm -f arrayfunc.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c arrayfunc.c
+rm -f assoc.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c assoc.c
+rm -f braces.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c braces.c
+rm -f bracecomp.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c bracecomp.c
+In file included from bashintl.h:30,
+                 from test.c:55:
+test.c: In function 'beyond':
+./include/gettext.h:46:26: warning: passing argument 1 of 'test_syntax_error' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+test.c:147:22: note: in expansion of macro '_'
+  147 |   test_syntax_error (_("argument expected"), (char *)NULL);
+      |                      ^
+test.c:134:12: note: expected 'char *' but argument is of type 'const char *'
+  134 |      char *format, *arg;
+      |            ^~~~~~
+In file included from bashintl.h:30,
+                 from test.c:55:
+test.c: In function 'integer_expected_error':
+./include/gettext.h:46:26: warning: passing argument 1 of 'test_syntax_error' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+test.c:156:22: note: in expansion of macro '_'
+  156 |   test_syntax_error (_("%s: integer expression expected"), pch);
+      |                      ^
+test.c:134:12: note: expected 'char *' but argument is of type 'const char *'
+  134 |      char *format, *arg;
+      |            ^~~~~~
+In file included from bashintl.h:30,
+                 from test.c:55:
+test.c: In function 'term':
+./include/gettext.h:46:26: warning: passing argument 1 of 'test_syntax_error' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+test.c:265:28: note: in expansion of macro '_'
+  265 |         test_syntax_error (_("`)' expected"), (char *)NULL);
+      |                            ^
+test.c:134:12: note: expected 'char *' but argument is of type 'const char *'
+  134 |      char *format, *arg;
+      |            ^~~~~~
+In file included from bashintl.h:30,
+                 from test.c:55:
+./include/gettext.h:46:26: warning: passing argument 1 of 'test_syntax_error' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+test.c:267:28: note: in expansion of macro '_'
+  267 |         test_syntax_error (_("`)' expected, found %s"), argv[pos]);
+      |                            ^
+test.c:134:12: note: expected 'char *' but argument is of type 'const char *'
+  134 |      char *format, *arg;
+      |            ^~~~~~
+In file included from bashintl.h:30,
+                 from test.c:55:
+test.c: In function 'binary_operator':
+./include/gettext.h:46:26: warning: passing argument 1 of 'test_syntax_error' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+test.c:469:26: note: in expansion of macro '_'
+  469 |       test_syntax_error (_("%s: binary operator expected"), w);
+      |                          ^
+test.c:134:12: note: expected 'char *' but argument is of type 'const char *'
+  134 |      char *format, *arg;
+      |            ^~~~~~
+In file included from bashintl.h:30,
+                 from test.c:55:
+test.c: In function 'two_arguments':
+./include/gettext.h:46:26: warning: passing argument 1 of 'test_syntax_error' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+test.c:771:28: note: in expansion of macro '_'
+  771 |         test_syntax_error (_("%s: unary operator expected"), argv[pos]);
+      |                            ^
+test.c:134:12: note: expected 'char *' but argument is of type 'const char *'
+  134 |      char *format, *arg;
+      |            ^~~~~~
+In file included from bashintl.h:30,
+                 from test.c:55:
+./include/gettext.h:46:26: warning: passing argument 1 of 'test_syntax_error' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+test.c:774:24: note: in expansion of macro '_'
+  774 |     test_syntax_error (_("%s: unary operator expected"), argv[pos]);
+      |                        ^
+test.c:134:12: note: expected 'char *' but argument is of type 'const char *'
+  134 |      char *format, *arg;
+      |            ^~~~~~
+In file included from bashintl.h:30,
+                 from test.c:55:
+test.c: In function 'three_arguments':
+./include/gettext.h:46:26: warning: passing argument 1 of 'test_syntax_error' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+test.c:815:24: note: in expansion of macro '_'
+  815 |     test_syntax_error (_("%s: binary operator expected"), argv[pos+1]);
+      |                        ^
+test.c:134:12: note: expected 'char *' but argument is of type 'const char *'
+  134 |      char *format, *arg;
+      |            ^~~~~~
+In file included from bashintl.h:30,
+                 from test.c:55:
+test.c: In function 'test_command':
+./include/gettext.h:46:26: warning: passing argument 1 of 'test_syntax_error' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+test.c:897:28: note: in expansion of macro '_'
+  897 |         test_syntax_error (_("missing `]'"), (char *)NULL);
+      |                            ^
+test.c:134:12: note: expected 'char *' but argument is of type 'const char *'
+  134 |      char *format, *arg;
+      |            ^~~~~~
+In file included from bashintl.h:30,
+                 from test.c:55:
+./include/gettext.h:46:26: warning: passing argument 1 of 'test_syntax_error' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+test.c:915:28: note: in expansion of macro '_'
+  915 |         test_syntax_error (_("syntax error: `%s' unexpected"), argv[pos]);
+      |                            ^
+test.c:134:12: note: expected 'char *' but argument is of type 'const char *'
+  134 |      char *format, *arg;
+      |            ^~~~~~
+In file included from bashintl.h:30,
+                 from test.c:55:
+./include/gettext.h:46:26: warning: passing argument 1 of 'test_syntax_error' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+test.c:917:28: note: in expansion of macro '_'
+  917 |         test_syntax_error (_("too many arguments"), (char *)NULL);
+      |                            ^
+test.c:134:12: note: expected 'char *' but argument is of type 'const char *'
+  134 |      char *format, *arg;
+      |            ^~~~~~
+rm -f bashhist.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c bashhist.c
+rm -f list.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c list.c
+gcc -static -s -Wl,--gc-sections -rdynamic -Os -ffunction-sections -fdata-sections -static -march=armv8-a  -o mkbuiltins mkbuiltins.o 
+rm -f stringlib.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c stringlib.c
+rm -f locale.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c locale.c
+rm -f findcmd.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c findcmd.c
+rm -f pcomplib.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c pcomplib.c
+rm -f xmalloc.o
+locale.c: In function 'localetrans':
+locale.c:442:16: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  442 |     translated = dgettext (default_domain, string);
+      |                ^
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c xmalloc.c
+make[1]: warning: -j10 forced in submake: resetting jobserver mode.
+make[1]: Entering directory '/workspace/build/bash-5.2/support'
+rm -f man2html.o
+gcc -c  -DHAVE_CONFIG_H -DSHELL  -I/workspace/build/bash-5.2 -I..    -Os -ffunction-sections -fdata-sections -static -march=armv8-a man2html.c
+rm -f shell.o
+rm -f eval.o
+rm -f general.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c shell.c
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c eval.c
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c general.c
+make[1]: Leaving directory '/workspace/build/bash-5.2/builtins'
+rm -f make_cmd.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c make_cmd.c
+rm -f print_cmd.o
+rm -f dispose_cmd.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c print_cmd.c
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c dispose_cmd.c
+rm -f syntax.c
+./mksyntax -o syntax.c
+rm -f copy_cmd.o
+rm -f error.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c copy_cmd.c
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c error.c
+rm -f expr.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c expr.c
+eval.c: In function 'alrm_catcher':
+eval.c:243:7: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  243 |   msg = _("\007timed out waiting for input: auto-logout\n");
+      |       ^
+eval.c:244:3: warning: ignoring return value of 'write' declared with attribute 'warn_unused_result' [-Wunused-result]
+  244 |   write (1, msg, strlen (msg));
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+rm -f flags.o
+print_cmd.c: In function 'make_command_string_internal':
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c flags.c
+print_cmd.c:189:14: warning: zero-length gnu_printf format string [-Wformat-zero-length]
+  189 |     cprintf ("");
+      |              ^~
+shell.c: In function 'get_current_user_info':
+shell.c:1914:34: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+ 1914 |           current_user.user_name = _("I have no name!");
+      |                                  ^
+rm -f jobs.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c jobs.c
+In file included from bashintl.h:30,
+                 from error.c:44:
+error.c: In function 'command_errstr':
+./include/gettext.h:46:26: warning: return discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+error.c:513:11: note: in expansion of macro '_'
+  513 |   return (_(cmd_error_table[code]));
+      |           ^
+rm -f subst.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c subst.c
+rm -f hashcmd.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c hashcmd.c
+rm -f hashlib.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c hashlib.c
+rm -f mailcheck.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c mailcheck.c
+rm -f mksignames
+gcc -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib    -Os -ffunction-sections -fdata-sections -static -march=armv8-a  -static -s -Wl,--gc-sections -rdynamic -Os -ffunction-sections -fdata-sections -static -march=armv8-a  -o mksignames mksignames.o buildsignames.o 
+rm -f sig.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c sig.c
+rm -f bashline.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c bashline.c
+rm -f pcomplete.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c pcomplete.c
+jobs.c: In function 'printable_job_status':
+jobs.c:1868:8: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+ 1868 |   temp = _("Done");
+      |        ^
+jobs.c:1873:14: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+ 1873 |         temp = _("Stopped");
+      |              ^
+jobs.c:1881:10: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+ 1881 |     temp = _("Running");
+      |          ^
+jobs.c:1903:14: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+ 1903 |         temp = _("Unknown status");
+      |              ^
+rm -f syntax.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c syntax.c
+rm -f execute_cmd.o
+gcc -static -s -Wl,--gc-sections -rdynamic -Os -ffunction-sections -fdata-sections -static -march=armv8-a man2html.o -o man2html 		
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c execute_cmd.c
+mailcheck.c: In function 'check_mail':
+mailcheck.c:439:19: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  439 |           message = mailfiles[i]->msg ? mailfiles[i]->msg : _("You have mail in $_");
+      |                   ^
+mailcheck.c:464:21: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  464 |             message = _("You have new mail in $_");
+      |                     ^
+/bin/sh ./support/mkversion.sh -b -S . -s release -d 5.2 -o newversion.h \
+	&& mv newversion.h version.h
+rm -f variables.o
+rm -f version.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c version.c
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c variables.c
+make[1]: warning: -j10 forced in submake: resetting jobserver mode.
+make[1]: Entering directory '/workspace/build/bash-5.2/builtins'
+rm -f builtins.o
+rm -f alias.o
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a builtins.c
+./mkbuiltins -D . alias.def
+rm -f bind.o
+rm -f break.o
+./mkbuiltins -D . bind.def
+./mkbuiltins -D . break.def
+rm -f builtin.o
+rm -f caller.o
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a alias.c || ( rm -f alias.c ; exit 1 )
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a break.c || ( rm -f break.c ; exit 1 )
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a bind.c || ( rm -f bind.c ; exit 1 )
+./mkbuiltins -D . builtin.def
+./mkbuiltins -D . caller.def
+rm -f cd.o
+rm -f colon.o
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a builtin.c || ( rm -f builtin.c ; exit 1 )
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a caller.c || ( rm -f caller.c ; exit 1 )
+./mkbuiltins -D . cd.def
+./mkbuiltins -D . colon.def
+rm -f command.o
+./mkbuiltins -D . command.def
+rm -f common.o
+gcc -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib    -Os -ffunction-sections -fdata-sections -static -march=armv8-a  -DBUILDTOOL -c -o buildversion.o ./version.c
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a colon.c || ( rm -f colon.c ; exit 1 )
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a cd.c || ( rm -f cd.c ; exit 1 )
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a command.c || ( rm -f command.c ; exit 1 )
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a common.c
+rm -f lsignames.h
+./mksignames lsignames.h
+if cmp -s lsignames.h signames.h ; then :; else rm -f signames.h ; cp lsignames.h signames.h ; fi
+rm -f trap.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c trap.c
+make[1]: Leaving directory '/workspace/build/bash-5.2/support'
+gcc -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib    -Os -ffunction-sections -fdata-sections -static -march=armv8-a  -static -s -Wl,--gc-sections -rdynamic -Os -ffunction-sections -fdata-sections -static -march=armv8-a  -o bashversion ./support/bashversion.c buildversion.o 
+rm -f declare.o
+./mkbuiltins -D . declare.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a declare.c || ( rm -f declare.c ; exit 1 )
+In file included from ../bashintl.h:30,
+                 from ./break.def:43:
+./break.def: In function 'break_builtin':
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./break.def:77:36: note: in expansion of macro '_'
+   77 |       sh_erange (list->word->word, _("loop count"));
+      |                                    ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./break.def:45:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+In file included from ../bashintl.h:30,
+                 from ./break.def:43:
+./break.def: In function 'continue_builtin':
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./break.def:119:36: note: in expansion of macro '_'
+  119 |       sh_erange (list->word->word, _("loop count"));
+      |                                    ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./break.def:45:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+rm -f colon.c
+trap.c: In function 'signal_name':
+trap.c:219:7: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  219 |   ret = (sig >= BASH_NSIG || sig < 0 || signal_names[sig] == NULL)
+      |       ^
+rm -f echo.o
+rm -f builtin.c
+./mkbuiltins -D . echo.def
+rm -f enable.o
+./mkbuiltins -D . enable.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a echo.c || ( rm -f echo.c ; exit 1 )
+rm -f alias.c
+rm -f command.c
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a enable.c || ( rm -f enable.c ; exit 1 )
+rm -f eval.o
+rm -f break.c
+./mkbuiltins -D . eval.def
+rm -f evalfile.o
+rm -f evalstring.o
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a evalfile.c
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a eval.c || ( rm -f eval.c ; exit 1 )
+rm -f caller.c
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a evalstring.c
+rm -f exec.o
+./mkbuiltins -D . exec.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a exec.c || ( rm -f exec.c ; exit 1 )
+rm -f bind.c
+rm -f exit.o
+./mkbuiltins -D . exit.def
+common.c: In function 'sh_invalidnum':
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a exit.c || ( rm -f exit.c ; exit 1 )
+common.c:240:9: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  240 |     msg = _("invalid octal number");
+      |         ^
+common.c:242:9: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  242 |     msg = _("invalid hex number");
+      |         ^
+common.c:244:9: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  244 |     msg = _("invalid number");
+      |         ^
+rm -f cd.c
+rm -f fc.o
+./mkbuiltins -D . fc.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a fc.c || ( rm -f fc.c ; exit 1 )
+rm -f fg_bg.o
+./mkbuiltins -D . fg_bg.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a fg_bg.c || ( rm -f fg_bg.c ; exit 1 )
+
+	  ***********************************************************
+	  *                                                         *
+	  * GNU bash, version 5.2.0(1)-release (aarch64-unknown-linux-gnu)
+	  *                                                         *
+	  ***********************************************************
+
+making lib/glob/libglob.a in ./lib/glob
+making lib/sh/libsh.a in ./lib/sh
+make[1]: warning: -j10 forced in submake: resetting jobserver mode.
+making lib/readline/libreadline.a in ./lib/readline
+make[1]: warning: -j10 forced in submake: resetting jobserver mode.
+making lib/termcap/libtermcap.a in ./lib/termcap
+making lib/tilde/libtilde.a in ./lib/tilde
+make[1]: warning: -j10 forced in submake: resetting jobserver mode.
+make[1]: warning: -j10 forced in submake: resetting jobserver mode.
+make[1]: warning: -j10 forced in submake: resetting jobserver mode.
+make[1]: Entering directory '/workspace/build/bash-5.2/lib/termcap'
+gcc -c -Os -ffunction-sections -fdata-sections -static -march=armv8-a -DHAVE_CONFIG_H  -I. -I../.. -I../.. -I../../lib -I. termcap.c
+gcc -c -Os -ffunction-sections -fdata-sections -static -march=armv8-a -DHAVE_CONFIG_H  -I. -I../.. -I../.. -I../../lib -I. tparam.c
+make[1]: Entering directory '/workspace/build/bash-5.2/lib/glob'
+rm -f glob.o
+rm -f strmatch.o
+gcc -c  -DHAVE_CONFIG_H -DSHELL -I. -I../.. -I../.. -I../../include -I../../lib    -Os -ffunction-sections -fdata-sections -static -march=armv8-a  glob.c
+gcc -c  -DHAVE_CONFIG_H -DSHELL -I. -I../.. -I../.. -I../../include -I../../lib    -Os -ffunction-sections -fdata-sections -static -march=armv8-a  strmatch.c
+rm -f smatch.o
+rm -f xmbsrtowcs.o
+gcc -c  -DHAVE_CONFIG_H -DSHELL -I. -I../.. -I../.. -I../../include -I../../lib    -Os -ffunction-sections -fdata-sections -static -march=armv8-a  smatch.c
+rm -f gmisc.o
+gcc -c  -DHAVE_CONFIG_H -DSHELL -I. -I../.. -I../.. -I../../include -I../../lib    -Os -ffunction-sections -fdata-sections -static -march=armv8-a  xmbsrtowcs.c
+gcc -c  -DHAVE_CONFIG_H -DSHELL -I. -I../.. -I../.. -I../../include -I../../lib    -Os -ffunction-sections -fdata-sections -static -march=armv8-a  gmisc.c
+make[1]: Entering directory '/workspace/build/bash-5.2/lib/readline'
+rm -f readline.o
+rm -f vi_mode.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  readline.c
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  vi_mode.c
+rm -f funmap.o
+rm -f keymaps.o
+make[1]: Entering directory '/workspace/build/bash-5.2/lib/tilde'
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I../.. -I../.. -I../../include -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a tilde.c
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  funmap.c
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  keymaps.c
+rm -f parens.o
+rm -f search.o
+rm -f rltty.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  parens.c
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  search.c
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  rltty.c
+make[1]: Entering directory '/workspace/build/bash-5.2/lib/sh'
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   clktck.c
+rm -f complete.o
+rm -f bind.o
+rm -f isearch.o
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   clock.c
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  complete.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   getenv.c
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  isearch.c
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  bind.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   oslib.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   setlinebuf.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   strnlen.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   itos.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   zread.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   zwrite.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   shtty.c
+rm -f declare.c
+rm -f hash.o
+./mkbuiltins -D . hash.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a hash.c || ( rm -f hash.c ; exit 1 )
+rm -f y.tab.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c y.tab.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   shmatch.c
+rm -f eval.c
+rm -f help.o
+./mkbuiltins -D . help.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a help.c || ( rm -f help.c ; exit 1 )
+rm -f echo.c
+rm -f history.o
+./mkbuiltins -D . history.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a history.c || ( rm -f history.c ; exit 1 )
+tparam.c: In function 'memory_out':
+tparam.c:67:3: warning: implicit declaration of function 'write' [-Wimplicit-function-declaration]
+   67 |   write (2, "virtual memory exhausted\n", 25);
+      |   ^~~~~
+rm -f enable.c
+rm -f jobs.o
+./mkbuiltins -D . jobs.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a jobs.c || ( rm -f jobs.c ; exit 1 )
+termcap.c: In function 'memory_out':
+termcap.c:116:3: warning: ignoring return value of 'write' declared with attribute 'warn_unused_result' [-Wunused-result]
+  116 |   write (2, "virtual memory exhausted\n", 25);
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+rm -f exit.c
+rm -f kill.o
+./mkbuiltins -D . kill.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a kill.c || ( rm -f kill.c ; exit 1 )
+rm -f let.o
+./mkbuiltins -D . let.def
+rm -f mapfile.o
+./mkbuiltins -D . mapfile.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a let.c || ( rm -f let.c ; exit 1 )
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a mapfile.c || ( rm -f mapfile.c ; exit 1 )
+rm -f -f libtermcap.a
+ar cr libtermcap.a termcap.o tparam.o
+test -n "ranlib" && ranlib libtermcap.a
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   eaccess.c
+make[1]: Leaving directory '/workspace/build/bash-5.2/lib/termcap'
+rm -f exec.c
+rm -f pushd.o
+rm -f display.o
+./mkbuiltins -D . pushd.def
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  display.c
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a pushd.c || ( rm -f pushd.c ; exit 1 )
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   netconn.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   netopen.c
+rm -f signals.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  signals.c
+rm -f libtilde.a
+ar cr libtilde.a tilde.o
+test -n "ranlib" && ranlib libtilde.a
+rm -f util.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  util.c
+make[1]: Leaving directory '/workspace/build/bash-5.2/lib/tilde'
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   timeval.c
+rm -f kill.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  kill.c
+rm -f undo.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  undo.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   makepath.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   pathcanon.c
+./fg_bg.def: In function 'fg_bg':
+./fg_bg.def:152:44: warning: passing argument 1 of 'sh_badjob' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  152 |         sh_badjob (list ? list->word->word : _("current"));
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./fg_bg.def:48:
+common.h:102:31: note: expected 'char *' but argument is of type 'const char *'
+  102 | extern void sh_badjob PARAMS((char *));
+      |                               ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+rm -f fg_bg.c
+rm -f read.o
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   pathphys.c
+./mkbuiltins -D . read.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a read.c || ( rm -f read.c ; exit 1 )
+rm -f macro.o
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   tmpfile.c
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  macro.c
+In file included from ../bashintl.h:30,
+                 from ./fc.def:72:
+./fc.def: In function 'fc_builtin':
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./fc.def:363:32: note: in expansion of macro '_'
+  363 |       sh_erange ((char *)NULL, _("history specification"));
+      |                                ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./fc.def:75:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+In file included from ../bashintl.h:30,
+                 from ./fc.def:72:
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./fc.def:368:32: note: in expansion of macro '_'
+  368 |       sh_erange ((char *)NULL, _("history specification"));
+      |                                ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./fc.def:75:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+In file included from ../bashintl.h:30,
+                 from ./fc.def:72:
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./fc.def:407:32: note: in expansion of macro '_'
+  407 |       sh_erange ((char *)NULL, _("history specification"));
+      |                                ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./fc.def:75:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+In file included from ../bashintl.h:30,
+                 from ./fc.def:72:
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./fc.def:412:32: note: in expansion of macro '_'
+  412 |       sh_erange ((char *)NULL, _("history specification"));
+      |                                ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./fc.def:75:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+rm -f input.o
+rm -f callback.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  input.c
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  callback.c
+rm -f fc.c
+rm -f return.o
+./mkbuiltins -D . return.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a return.c || ( rm -f return.c ; exit 1 )
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   stringlist.c
+rm -f terminal.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  terminal.c
+rm -f hash.c
+rm -f set.o
+./mkbuiltins -D . set.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a set.c || ( rm -f set.c ; exit 1 )
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   stringvec.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   spell.c
+rm -f -f libglob.a
+ar cr libglob.a glob.o strmatch.o smatch.o xmbsrtowcs.o gmisc.o
+In file included from bashintl.h:30,
+                 from /usr/local/src/chet/src/bash/src/parse.y:43:
+/usr/local/src/chet/src/bash/src/parse.y: In function 'push_heredoc':
+./include/gettext.h:46:26: warning: passing argument 1 of 'report_syntax_error' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+/usr/local/src/chet/src/bash/src/parse.y:2924:28: note: in expansion of macro '_'
+In file included from command.h:25,
+                 from shell.h:27,
+                 from /usr/local/src/chet/src/bash/src/parse.y:47:
+/usr/local/src/chet/src/bash/src/parse.y:210:41: note: expected 'char *' but argument is of type 'const char *'
+./include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+/usr/local/src/chet/src/bash/src/parse.y: In function 'report_syntax_error':
+/usr/local/src/chet/src/bash/src/parse.y:6261:8: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+test -n "ranlib" && ranlib libglob.a
+make[1]: Leaving directory '/workspace/build/bash-5.2/lib/glob'
+rm -f text.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  text.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   shquote.c
+./jobs.def: In function 'disown_builtin':
+./jobs.def:284:46: warning: passing argument 1 of 'sh_badjob' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  284 |           sh_badjob (list ? list->word->word : _("current"));
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./jobs.def:61:
+common.h:102:31: note: expected 'char *' but argument is of type 'const char *'
+  102 | extern void sh_badjob PARAMS((char *));
+      |                               ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+rm -f nls.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  nls.c
+rm -f jobs.c
+rm -f setattr.o
+./mkbuiltins -D . setattr.def
+rm -f misc.o
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a setattr.c || ( rm -f setattr.c ; exit 1 )
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  misc.c
+rm -f history.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  history.c
+rm -f histexpand.o
+./help.def: In function 'show_manpage':
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  histexpand.c
+./help.def:315:10: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  315 |     line = doc ? _(doc[0]) : (char *)NULL;
+      |          ^
+./help.def: In function 'dispcolumn':
+./help.def:380:11: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  380 |   helpdoc = _(shell_builtins[i].short_doc);
+      |           ^
+./help.def:399:11: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  399 |   helpdoc = _(shell_builtins[i+height].short_doc);
+      |           ^
+./help.def: In function 'wdispcolumn':
+./help.def:424:11: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  424 |   helpdoc = _(shell_builtins[i].short_doc);
+      |           ^
+./help.def:473:11: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  473 |   helpdoc = _(shell_builtins[i+height].short_doc);
+      |           ^
+rm -f let.c
+rm -f shift.o
+./mkbuiltins -D . shift.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a shift.c || ( rm -f shift.c ; exit 1 )
+rm -f help.c
+rm -f source.o
+./mkbuiltins -D . source.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a source.c || ( rm -f source.c ; exit 1 )
+In file included from ../bashintl.h:30,
+                 from ./history.def:75:
+./history.def: In function 'history_builtin':
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./history.def:192:34: note: in expansion of macro '_'
+  192 |           sh_erange (delete_arg, _("history position"));
+      |                                  ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./history.def:77:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+In file included from ../bashintl.h:30,
+                 from ./history.def:75:
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./history.def:204:34: note: in expansion of macro '_'
+  204 |           sh_erange (delete_arg, _("history position"));
+      |                                  ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./history.def:77:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+In file included from ../bashintl.h:30,
+                 from ./history.def:75:
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./history.def:215:29: note: in expansion of macro '_'
+  215 |           sh_erange (range, _("history position"));
+      |                             ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./history.def:77:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+In file included from ../bashintl.h:30,
+                 from ./history.def:75:
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./history.def:228:34: note: in expansion of macro '_'
+  228 |           sh_erange (delete_arg, _("history position"));
+      |                                  ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./history.def:77:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+In file included from ../bashintl.h:30,
+                 from ./history.def:75:
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./history.def:240:38: note: in expansion of macro '_'
+  240 |               sh_erange (delete_arg, _("history position"));
+      |                                      ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./history.def:77:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+In file included from ../bashintl.h:30,
+                 from ./history.def:75:
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./history.def:247:34: note: in expansion of macro '_'
+  247 |           sh_erange (delete_arg, _("history position"));
+      |                                  ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./history.def:77:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+./kill.def: In function 'kill_error':
+./kill.def:274:7: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  274 |     x = _("Unknown error");
+      |       ^
+rm -f histfile.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  histfile.c
+rm -f mapfile.c
+rm -f suspend.o
+./mkbuiltins -D . suspend.def
+rm -f kill.c
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a suspend.c || ( rm -f suspend.c ; exit 1 )
+rm -f test.o
+./mkbuiltins -D . test.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a test.c || ( rm -f test.c ; exit 1 )
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   strtrans.c
+In file included from ../bashintl.h:30,
+                 from ./pushd.def:132:
+./pushd.def: In function 'pushd_error':
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./pushd.def:526:21: note: in expansion of macro '_'
+  526 |     sh_erange (arg, _("directory stack index"));
+      |                     ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./pushd.def:138:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+rm -f histsearch.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  histsearch.c
+rm -f shell.o
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   snprintf.c
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  shell.c
+rm -f history.c
+rm -f times.o
+./mkbuiltins -D . times.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a times.c || ( rm -f times.c ; exit 1 )
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   mailstat.c
+rm -f pushd.c
+rm -f trap.o
+./mkbuiltins -D . trap.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a trap.c || ( rm -f trap.c ; exit 1 )
+rm -f return.c
+rm -f type.o
+./mkbuiltins -D . type.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a type.c || ( rm -f type.c ; exit 1 )
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   fmtulong.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   fmtullong.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   fmtumax.c
+rm -f savestring.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  savestring.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   zcatfd.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   zmapfd.c
+rm -f mbutil.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  mbutil.c
+rm -f read.c
+gcc  -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a  -static -s -Wl,--gc-sections -rdynamic -Os -ffunction-sections -fdata-sections -static -march=armv8-a  -o psize.aux ./psize.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   winsize.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   wcsdup.c
+rm -f tilde.o
+gcc -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  -DREADLINE_LIBRARY -c ./tilde.c
+rm -f colors.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  colors.c
+rm -f parse-colors.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  parse-colors.c
+rm -f xmalloc.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  xmalloc.c
+rm -f xfree.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  xfree.c
+rm -f set.c
+rm -f umask.o
+./mkbuiltins -D . umask.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a umask.c || ( rm -f umask.c ; exit 1 )
+rm -f compat.o
+gcc -c -DHAVE_CONFIG_H -DSHELL   -I. -I/workspace/build/bash-5.2 -I../.. -I../../lib   -Os -ffunction-sections -fdata-sections -static -march=armv8-a  compat.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   fpurge.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   zgetline.c
+rm -f setattr.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   mbscmp.c
+rm -f wait.o
+./mkbuiltins -D . wait.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a wait.c || ( rm -f wait.c ; exit 1 )
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   uconvert.c
+In file included from ../bashintl.h:30,
+                 from ./shift.def:33:
+./shift.def: In function 'shift_builtin':
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./shift.def:72:50: note: in expansion of macro '_'
+   72 |       sh_erange (list ? list->word->word : NULL, _("shift count"));
+      |                                                  ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./shift.def:35:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+In file included from ../bashintl.h:30,
+                 from ./shift.def:33:
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./shift.def:79:52: note: in expansion of macro '_'
+   79 |         sh_erange (list ? list->word->word : NULL, _("shift count"));
+      |                                                    ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./shift.def:35:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+rm -f shift.c
+rm -f getopts.o
+./mkbuiltins -D . getopts.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a getopts.c || ( rm -f getopts.c ; exit 1 )
+In file included from ../bashintl.h:30,
+                 from ./suspend.def:53:
+./suspend.def: In function 'suspend_builtin':
+../include/gettext.h:46:26: warning: passing argument 1 of 'sh_nojobs' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./suspend.def:107:22: note: in expansion of macro '_'
+  107 |           sh_nojobs (_("cannot suspend"));
+      |                      ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./suspend.def:54:
+common.h:103:31: note: expected 'char *' but argument is of type 'const char *'
+  103 | extern void sh_nojobs PARAMS((char *));
+      |                               ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+rm -f suspend.c
+rm -f shopt.o
+./mkbuiltins -D . shopt.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a shopt.c || ( rm -f shopt.c ; exit 1 )
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   ufuncs.c
+rm -f test.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   casemod.c
+rm -f printf.o
+./mkbuiltins -D . printf.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a printf.c || ( rm -f printf.c ; exit 1 )
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   input_avail.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   mbscasecmp.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   fnxform.c
+rm -f times.c
+rm -f getopt.o
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a getopt.c
+rm -f source.c
+rm -f bashgetopt.o
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a bashgetopt.c
+rm -f trap.c
+rm -f complete.o
+./mkbuiltins -D . complete.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a complete.c || ( rm -f complete.c ; exit 1 )
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   unicode.c
+rm -f type.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   shmbchar.c
+rm -f libreadline.a
+ar cr libreadline.a readline.o vi_mode.o funmap.o keymaps.o parens.o search.o rltty.o complete.o bind.o isearch.o display.o signals.o util.o kill.o undo.o macro.o input.o callback.o terminal.o text.o nls.o misc.o history.o histexpand.o histfile.o histsearch.o shell.o savestring.o mbutil.o tilde.o colors.o parse-colors.o xmalloc.o xfree.o compat.o 
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   strvis.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   utf8.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   random.c
+test -n "ranlib" && ranlib libreadline.a
+In file included from ../bashintl.h:30,
+                 from ./umask.def:57:
+./umask.def: In function 'umask_builtin':
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./umask.def:115:44: note: in expansion of macro '_'
+  115 |               sh_erange (list->word->word, _("octal number"));
+      |                                            ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./umask.def:59:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+rm -f umask.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   gettimeofday.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   timers.c
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   wcsnwidth.c
+rm -f wait.c
+make[1]: Leaving directory '/workspace/build/bash-5.2/lib/readline'
+making lib/readline/libhistory.a in ./lib/readline
+make[1]: warning: -j10 forced in submake: resetting jobserver mode.
+make[1]: Entering directory '/workspace/build/bash-5.2/lib/readline'
+rm -f libhistory.a
+ar cr libhistory.a history.o histexpand.o histfile.o histsearch.o shell.o savestring.o mbutil.o xmalloc.o xfree.o
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   mbschr.c
+rm -f getopts.c
+test -n "ranlib" && ranlib libhistory.a
+make[1]: Leaving directory '/workspace/build/bash-5.2/lib/readline'
+gcc -c   -I. -I../.. -I../.. -I../../lib -I../../include -I.  -DHAVE_CONFIG_H -DSHELL   -Os -ffunction-sections -fdata-sections -static -march=armv8-a   strtoimax.c
+/bin/sh ./psize.sh > pipesize.h
+rm -f shopt.c
+random.c: In function 'genseed':
+random.c:93:8: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+   93 |   iv = (u_bits32_t)seedrand;            /* let the compiler truncate */
+      |        ^
+rm -f complete.c
+rm -f libsh.a
+ar cr libsh.a clktck.o clock.o getenv.o oslib.o setlinebuf.o strnlen.o itos.o zread.o zwrite.o shtty.o shmatch.o eaccess.o netconn.o netopen.o timeval.o makepath.o pathcanon.o pathphys.o tmpfile.o stringlist.o stringvec.o spell.o shquote.o strtrans.o snprintf.o mailstat.o fmtulong.o fmtullong.o fmtumax.o zcatfd.o zmapfd.o winsize.o wcsdup.o fpurge.o zgetline.o mbscmp.o uconvert.o ufuncs.o casemod.o input_avail.o mbscasecmp.o fnxform.o unicode.o shmbchar.o strvis.o utf8.o random.o gettimeofday.o timers.o wcsnwidth.o mbschr.o strtoimax.o
+test -n "ranlib" && ranlib libsh.a
+make[1]: Leaving directory '/workspace/build/bash-5.2/lib/sh'
+rm -f printf.c
+rm -f ulimit.o
+./mkbuiltins -D . ulimit.def
+gcc -c   -DHAVE_CONFIG_H -DSHELL  -I. -I..  -I.. -I../include -I../lib -I.     -Os -ffunction-sections -fdata-sections -static -march=armv8-a ulimit.c || ( rm -f ulimit.c ; exit 1 )
+In file included from ../bashintl.h:30,
+                 from ./ulimit.def:90:
+./ulimit.def: In function 'ulimit_internal':
+../include/gettext.h:46:26: warning: passing argument 2 of 'sh_erange' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   46 | # define gettext(Msgid) ((const char *) (Msgid))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~
+../bashintl.h:36:25: note: in expansion of macro 'gettext'
+   36 | #define _(msgid)        gettext(msgid)
+      |                         ^~~~~~~
+./ulimit.def:490:30: note: in expansion of macro '_'
+  490 |           sh_erange (cmdarg, _("limit"));
+      |                              ^
+In file included from ../command.h:25,
+                 from ../shell.h:27,
+                 from ./ulimit.def:92:
+common.h:100:39: note: expected 'char *' but argument is of type 'const char *'
+  100 | extern void sh_erange PARAMS((char *, char *));
+      |                                       ^~~~~~
+../include/stdc.h:33:28: note: in definition of macro 'PARAMS'
+   33 | #    define PARAMS(protos) protos
+      |                            ^~~~~~
+rm -f ulimit.c
+rm -f libbuiltins.a
+ar cr libbuiltins.a builtins.o alias.o bind.o break.o builtin.o caller.o cd.o colon.o command.o common.o declare.o echo.o enable.o eval.o evalfile.o evalstring.o exec.o exit.o fc.o fg_bg.o hash.o help.o history.o jobs.o kill.o let.o mapfile.o pushd.o read.o return.o set.o setattr.o shift.o source.o suspend.o test.o times.o trap.o type.o ulimit.o umask.o wait.o getopts.o shopt.o printf.o getopt.o bashgetopt.o complete.o
+ranlib libbuiltins.a
+make[1]: Leaving directory '/workspace/build/bash-5.2/builtins'
+make[1]: warning: -j10 forced in submake: resetting jobserver mode.
+make[1]: Entering directory '/workspace/build/bash-5.2/builtins'
+make[1]: 'pipesize.h' is up to date.
+make[1]: Leaving directory '/workspace/build/bash-5.2/builtins'
+rm -f redir.o
+gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"aarch64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"aarch64-unknown-linux-gnu"' -DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib     -Os -ffunction-sections -fdata-sections -static -march=armv8-a -c redir.c
+redir.c: In function 'redirection_error':
+redir.c:150:14: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  150 |     filename = _("file descriptor out of range");
+      |              ^
+redir.c:198:14: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  198 |     filename = _("file descriptor out of range");
+      |              ^
+rm -f bash
+gcc -L./builtins -L./lib/readline -L./lib/readline -L./lib/glob -L./lib/tilde  -L./lib/sh -static -s -Wl,--gc-sections -o bash shell.o eval.o y.tab.o general.o make_cmd.o print_cmd.o  dispose_cmd.o execute_cmd.o variables.o copy_cmd.o error.o expr.o flags.o jobs.o subst.o hashcmd.o hashlib.o mailcheck.o trap.o input.o unwind_prot.o pathexp.o sig.o test.o version.o alias.o array.o arrayfunc.o assoc.o braces.o bracecomp.o bashhist.o bashline.o  list.o stringlib.o locale.o findcmd.o redir.o pcomplete.o pcomplib.o syntax.o xmalloc.o  -lbuiltins -lglob -lsh -lreadline -lhistory ./lib/termcap/libtermcap.a -ltilde     
+/usr/bin/ld: bashline.o: in function `bash_groupname_completion_function':
+bashline.c:(.text.bash_groupname_completion_function+0x64): warning: Using 'getgrent' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+/usr/bin/ld: bashline.c:(.text.bash_groupname_completion_function+0x50): warning: Using 'setgrent' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+/usr/bin/ld: bashline.c:(.text.bash_groupname_completion_function+0x70): warning: Using 'endgrent' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+/usr/bin/ld: ./lib/readline/libreadline.a(complete.o): in function `rl_username_completion_function':
+complete.c:(.text.rl_username_completion_function+0x8c): warning: Using 'getpwent' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+/usr/bin/ld: ./lib/readline/libreadline.a(tilde.o): in function `tilde_expand_word':
+tilde.c:(.text.tilde_expand_word+0x120): warning: Using 'getpwnam' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+/usr/bin/ld: shell.o: in function `get_current_user_info':
+shell.c:(.text.get_current_user_info+0x24): warning: Using 'getpwuid' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+/usr/bin/ld: ./lib/readline/libreadline.a(complete.o): in function `rl_username_completion_function':
+complete.c:(.text.rl_username_completion_function+0x78): warning: Using 'setpwent' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+/usr/bin/ld: shell.o: in function `get_current_user_info':
+shell.c:(.text.get_current_user_info+0xa4): warning: Using 'endpwent' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+/usr/bin/ld: ./lib/sh/libsh.a(tmpfile.o): in function `sh_mktmpname':
+tmpfile.c:(.text.sh_mktmpname+0x6c): warning: the use of `mktemp' is dangerous, better use `mkstemp' or `mkdtemp'
+/usr/bin/ld: bashline.o: in function `bash_servicename_completion_function':
+bashline.c:(.text.bash_servicename_completion_function+0xb8): warning: Using 'getservent' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+/usr/bin/ld: bashline.c:(.text.bash_servicename_completion_function+0x5c): warning: Using 'setservent' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+/usr/bin/ld: bashline.c:(.text.bash_servicename_completion_function+0xc8): warning: Using 'endservent' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+ls -l bash
+-rwxr-xr-x 1 root root 1792576 Nov 16 20:26 bash
+size bash
+   text	   data	    bss	    dec	    hex	filename
+1713900	  72224	  69496	1855620	 1c5084	bash

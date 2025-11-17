@@ -238,9 +238,10 @@ install_busybox() {
     log_info "Creating symlinks for BusyBox applets..."
     
     # Get list of applets
-    "$OUTPUT_DIR/bin/busybox" --list > "$OUTPUT_DIR/busybox-applets.txt" 2>/dev/null || {
-        log_error "Failed to get BusyBox applet list"
-        return 1
+    if ! "$OUTPUT_DIR/bin/busybox" --list > "$OUTPUT_DIR/busybox-applets.txt" 2>/dev/null; then
+        log_warning "Cannot execute busybox binary (cross-compiled?)"
+        log_warning "Skipping symlink creation - will be created during bootstrap assembly"
+        return 0
     }
     
     local symlink_count=0

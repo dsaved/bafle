@@ -1,0 +1,201 @@
+/* confdefs.h */
+#define PACKAGE_NAME "GNU coreutils"
+#define PACKAGE_TARNAME "coreutils"
+#define PACKAGE_VERSION "9.4"
+#define PACKAGE_STRING "GNU coreutils 9.4"
+#define PACKAGE_BUGREPORT "bug-coreutils@gnu.org"
+#define PACKAGE_URL "https://www.gnu.org/software/coreutils/"
+#define PACKAGE "coreutils"
+#define VERSION "9.4"
+#define HAVE_STDIO_H 1
+#define HAVE_STDLIB_H 1
+#define HAVE_STRING_H 1
+#define HAVE_INTTYPES_H 1
+#define HAVE_STDINT_H 1
+#define HAVE_STRINGS_H 1
+#define HAVE_SYS_STAT_H 1
+#define HAVE_SYS_TYPES_H 1
+#define HAVE_UNISTD_H 1
+#define HAVE_WCHAR_H 1
+#define HAVE_ARPA_INET_H 1
+#define HAVE_FEATURES_H 1
+#define HAVE_SYS_SOCKET_H 1
+#define HAVE_UCHAR_H 1
+#define HAVE_SYS_PARAM_H 1
+#define HAVE_DIRENT_H 1
+#define HAVE_ERROR_H 1
+#define HAVE_LINUX_XATTR_H 1
+#define HAVE_FNMATCH_H 1
+#define HAVE_STDIO_EXT_H 1
+#define HAVE_SYS_VFS_H 1
+#define HAVE_NETDB_H 1
+#define HAVE_NETINET_IN_H 1
+#define HAVE_GETOPT_H 1
+#define HAVE_SYS_CDEFS_H 1
+#define HAVE_TERMIOS_H 1
+#define HAVE_SYS_TIME_H 1
+#define HAVE_GRP_H 1
+#define HAVE_THREADS_H 1
+#define HAVE_ICONV_H 1
+#define HAVE_LIMITS_H 1
+#define HAVE_WCTYPE_H 1
+#define HAVE_LANGINFO_H 1
+#define HAVE_MATH_H 1
+#define HAVE_SYS_MMAN_H 1
+#define HAVE_SYS_STATVFS_H 1
+#define HAVE_SYS_SELECT_H 1
+#define HAVE_PTHREAD_H 1
+#define HAVE_UTMP_H 1
+#define HAVE_UTMPX_H 1
+#define HAVE_MALLOC_H 1
+#define HAVE_STDBOOL_H 1
+#define HAVE_SYS_IOCTL_H 1
+#define HAVE_SYS_RANDOM_H 1
+#define HAVE_SYS_RESOURCE_H 1
+#define HAVE_SYS_UIO_H 1
+#define HAVE_SYS_UTSNAME_H 1
+#define HAVE_SYS_WAIT_H 1
+#define HAVE_UTIME_H 1
+#define HAVE_SEMAPHORE_H 1
+#define HAVE_LINUX_FALLOC_H 1
+#define HAVE_LINUX_FS_H 1
+#define HAVE_PATHS_H 1
+#define HAVE_SYS_MTIO_H 1
+#define HAVE_SYSLOG_H 1
+#define HAVE_PWD_H 1
+#define STDC_HEADERS 1
+#define _ALL_SOURCE 1
+#define _DARWIN_C_SOURCE 1
+#define _GNU_SOURCE 1
+#define _HPUX_ALT_XOPEN_SOCKET_API 1
+#define _NETBSD_SOURCE 1
+#define _OPENBSD_SOURCE 1
+#define _POSIX_PTHREAD_SEMANTICS 1
+#define __STDC_WANT_IEC_60559_ATTRIBS_EXT__ 1
+#define __STDC_WANT_IEC_60559_BFP_EXT__ 1
+#define __STDC_WANT_IEC_60559_DFP_EXT__ 1
+#define __STDC_WANT_IEC_60559_EXT__ 1
+#define __STDC_WANT_IEC_60559_FUNCS_EXT__ 1
+#define __STDC_WANT_IEC_60559_TYPES_EXT__ 1
+#define __STDC_WANT_LIB_EXT2__ 1
+#define __STDC_WANT_MATH_SPEC_FUNCS__ 1
+#define _TANDEM_SOURCE 1
+#define __EXTENSIONS__ 1
+#define __USE_MINGW_ANSI_STDIO 1
+#define HAVE_FCHMOD 1
+#define HAVE_PATHCONF 1
+#define HAVE_BTOWC 1
+#define HAVE_MBRTOWC 1
+#define HAVE_MBSINIT 1
+#define HAVE_CANONICALIZE_FILE_NAME 1
+#define HAVE_REALPATH 1
+#define HAVE_LSTAT 1
+#define HAVE_CHOWN 1
+#define HAVE_FCHOWN 1
+#define HAVE_FCHDIR 1
+#define HAVE_FDOPENDIR 1
+#define HAVE_EXPLICIT_BZERO 1
+#define HAVE_POSIX_FADVISE 1
+#define HAVE_FCHMODAT 1
+#define HAVE_LCHMOD 1
+#define HAVE_FCNTL 1
+#define HAVE_SYMLINK 1
+#define HAVE_LISTXATTR 1
+#define HAVE_FNMATCH 1
+#define HAVE_MBSRTOWCS 1
+#define HAVE_FSTATAT 1
+#define HAVE_FSYNC 1
+#define HAVE_OPENAT 1
+#define HAVE_FSTATFS 1
+#define HAVE_GETDTABLESIZE 1
+#define HAVE_GETLOGIN 1
+#define HAVE_FLOCKFILE 1
+#define HAVE_FUNLOCKFILE 1
+#define HAVE_GETPASS 1
+#define HAVE_TIMESPEC_GETRES 1
+#define HAVE_GETTIMEOFDAY 1
+#define HAVE_GETUSERSHELL 1
+#define HAVE_ISBLANK 1
+#define HAVE_ISWCNTRL 1
+#define HAVE_LINK 1
+#define HAVE_READLINK 1
+#define HAVE_MBRLEN 1
+#define HAVE_ISASCII 1
+#define HAVE_MPROTECT 1
+#define HAVE_GETGROUPLIST 1
+#define HAVE_MKDIRAT 1
+#define HAVE_MKNOD 1
+#define HAVE_MKSTEMP 1
+#define HAVE_PIPE 1
+#define HAVE_PSELECT 1
+#define HAVE_PTHREAD_SIGMASK 1
+#define HAVE_UTMPNAME 1
+#define HAVE_UTMPXNAME 1
+#define HAVE_ISWCTYPE 1
+#define HAVE_RENAMEAT 1
+#define HAVE_FPATHCONF 1
+#define HAVE_SECURE_GETENV 1
+#define HAVE_GETUID 1
+#define HAVE_GETEUID 1
+#define HAVE_GETGID 1
+#define HAVE_GETEGID 1
+#define HAVE_SETENV 1
+#define HAVE_SETTIMEOFDAY 1
+#define HAVE_SIGACTION 1
+#define HAVE_SIGALTSTACK 1
+#define HAVE_SIGINTERRUPT 1
+#define HAVE_SNPRINTF 1
+#define HAVE___XPG_STRERROR_R 1
+#define HAVE_STRTOIMAX 1
+#define HAVE_STRTOLD 1
+#define HAVE_STRTOUMAX 1
+#define HAVE_LOCALTIME_R 1
+#define HAVE_UNLINKAT 1
+#define HAVE_WCRTOMB 1
+#define HAVE_WCWIDTH 1
+#define HAVE_WCSWIDTH 1
+#define HAVE_PAUSE 1
+#define HAVE_GETRUSAGE 1
+#define HAVE_SLEEP 1
+#define HAVE_SHUTDOWN 1
+#define HAVE_USLEEP 1
+#define HAVE_WCTOB 1
+#define HAVE_NL_LANGINFO 1
+#define HAVE_SETITIMER 1
+#define HAVE_SETRLIMIT 1
+#define HAVE_PRCTL 1
+#define HAVE_ENDGRENT 1
+#define HAVE_ENDPWENT 1
+#define HAVE_FALLOCATE 1
+/* end confdefs.h.  */
+/* Define ftruncate to an innocuous variant, in case <limits.h> declares ftruncate.
+   For example, HP-UX 11i <limits.h> declares gettimeofday.  */
+#define ftruncate innocuous_ftruncate
+
+/* System header to define __stub macros and hopefully few prototypes,
+   which can conflict with char ftruncate (void); below.  */
+
+#include <limits.h>
+#undef ftruncate
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char ftruncate (void);
+/* The GNU C library defines this for functions which it implements
+    to always fail with ENOSYS.  Some functions are actually named
+    something starting with __ and the normal name is an alias.  */
+#if defined __stub_ftruncate || defined __stub___ftruncate
+choke me
+#endif
+
+int
+main (void)
+{
+return ftruncate ();
+  ;
+  return 0;
+}
