@@ -190,7 +190,7 @@ if [[ -n "$TEST_REPORT_BASE_URL" ]]; then
 fi
 
 # Update manifest using jq with new schema supporting multiple build modes
-if ! jq --arg version "$VERSION" \
+JQ_ERROR=$(jq --arg version "$VERSION" \
    --arg date "$CURRENT_DATE" \
    --arg repo "$REPO_NAME" \
    --arg mode "$BUILD_MODE" \
@@ -236,9 +236,16 @@ if ! jq --arg version "$VERSION" \
   if $mode == "android-native" then
     .architectures = .bootstraps["android-native"]
   else . end
-' "$MANIFEST_FILE" > "$TEMP_MANIFEST" 2>/dev/null; then
-    log_error "Failed to update manifest using jq"
-    log_error "This could be due to invalid JSON structure in the manifest"
+' "$MANIFEST_FILE" > "$TEMP_MANIFEST" 2>&1)
+
+JQ_EXIT_CODE=$?
+
+if [ $JQ_EXIT_CODE -ne 0 ]; then
+    log_error "Failed to update manifest using jq (exit code: $JQ_EXIT_CODE)"
+    log_error "JQ Error output:"
+    echo "$JQ_ERROR"
+    log_error "Checksums JSON:"
+    echo "$CHECKSUMS_JSON" | jq . 2>&1 || echo "$CHECKSUMS_JSON"
     rm -f "$TEMP_MANIFEST"
     exit 1
 fi
