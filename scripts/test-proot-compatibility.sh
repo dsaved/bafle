@@ -75,12 +75,25 @@ parse_args() {
 setup_proot() {
     log_info "Setting up PRoot for testing..."
     
-    # Capture the PRoot binary path from setup script
-    local proot_path
-    proot_path=$("$SCRIPT_DIR/setup-test-proot.sh" --arch "$TARGET_ARCH" 2>&1 | tail -1)
+    # Run setup script and capture the output path
+    # The setup script outputs the path as the last line to stdout
+    local setup_output
+    setup_output=$("$SCRIPT_DIR/setup-test-proot.sh" --arch "$TARGET_ARCH" 2>&1)
+    local exit_code=$?
     
-    if [[ ! -f "$proot_path" ]]; then
+    if [[ $exit_code -ne 0 ]]; then
         log_error "Failed to setup PRoot"
+        echo "$setup_output" >&2
+        return 1
+    fi
+    
+    # Extract the path (last line of output)
+    local proot_path
+    proot_path=$(echo "$setup_output" | tail -1)
+    
+    # Validate the path
+    if [[ ! -f "$proot_path" ]] || [[ ! -x "$proot_path" ]]; then
+        log_error "PRoot binary not found or not executable: $proot_path"
         return 1
     fi
     
