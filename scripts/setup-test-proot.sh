@@ -92,41 +92,67 @@ download_proot() {
     # Create cache directory
     mkdir -p "$(dirname "$output_path")"
     
-    # PRoot download URL (using Termux PRoot builds)
-    # Note: Termux PRoot releases use specific naming conventions
-    local base_url="https://github.com/termux/proot/releases/download/v${PROOT_VERSION}"
-    local filename="proot-${proot_arch}"
-    local download_url="${base_url}/${filename}"
-    
-    log_info "Download URL: $download_url"
-    
-    # Try to download with curl or wget
+    # Try multiple sources for PRoot binaries
     local download_success=false
     
+    # Source 1: Try Termux PRoot releases
+    local termux_url="https://github.com/termux/proot/releases/download/v${PROOT_VERSION}/proot-${proot_arch}"
+    log_info "Trying Termux PRoot: $termux_url"
+    
     if command -v curl &> /dev/null; then
-        if curl -L -f -o "$output_path" "$download_url" 2>&1; then
+        if curl -L -f -o "$output_path" "$termux_url" 2>/dev/null; then
             download_success=true
         fi
-    elif command -v wget &> /dev/null; then
-        if wget -O "$output_path" "$download_url" 2>&1; then
+    fi
+    
+    # Source 2: Try proot-me releases (different naming)
+    if [ "$download_success" = false ]; then
+        local proot_me_url="https://github.com/proot-me/proot/releases/download/v${PROOT_VERSION}/proot-${proot_arch}"
+        log_info "Trying proot-me: $proot_me_url"
+        
+        if command -v curl &> /dev/null; then
+            if curl -L -f -o "$output_path" "$proot_me_url" 2>/dev/null; then
+                download_success=true
+            fi
+        fi
+    fi
+    
+    # Source 3: For x86/i686, try using system PRoot if available
+    if [ "$download_success" = false ] && [ "$proot_arch" = "i686" ]; then
+        log_info "Checking for system PRoot..."
+        if command -v proot &> /dev/null; then
+            log_info "Using system PRoot"
+            cp "$(command -v proot)" "$output_path"
             download_success=true
         fi
-    else
-        log_error "Neither curl nor wget is available"
-        return 1
+    fi
+    
+    # Source 4: Try installing via apt (for CI environments)
+    if [ "$download_success" = false ]; then
+        log_info "Attempting to install PRoot via package manager..."
+        if command -v apt-get &> /dev/null; then
+            if sudo apt-get install -y proot &> /dev/null; then
+                if command -v proot &> /dev/null; then
+                    cp "$(command -v proot)" "$output_path"
+                    download_success=true
+                fi
+            fi
+        fi
     fi
     
     if [ "$download_success" = false ]; then
-        log_error "Failed to download PRoot from $download_url"
-        log_warning "PRoot binary may not be available for this architecture/version"
-        log_warning "You may need to build PRoot from source or use a different version"
+        log_error "Failed to obtain PRoot binary"
+        log_warning "Tried multiple sources but none succeeded"
+        log_warning "For testing, you may need to:"
+        log_warning "  1. Install PRoot: sudo apt-get install proot"
+        log_warning "  2. Or build from source: https://github.com/proot-me/proot"
         return 1
     fi
     
     # Make executable
     chmod +x "$output_path"
     
-    log_success "Downloaded PRoot to: $output_path"
+    log_success "PRoot binary ready at: $output_path"
     return 0
 }
 

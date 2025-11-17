@@ -97,6 +97,7 @@ jobs:
             bzip2 \
             file \
             patchelf \
+            proot \
             qemu-user-static \
             gcc-aarch64-linux-gnu \
             g++-aarch64-linux-gnu \
