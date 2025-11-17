@@ -251,6 +251,9 @@ install_busybox() {
     fi
     
     local symlink_count=0
+    local total_applets=$(wc -l < "$OUTPUT_DIR/busybox-applets.txt" | tr -d ' ')
+    log_info "Creating symlinks for $total_applets applets..."
+    
     while IFS= read -r applet; do
         # Skip busybox itself
         [ "$applet" = "busybox" ] && continue
