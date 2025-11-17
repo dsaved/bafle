@@ -254,13 +254,21 @@ install_busybox() {
     local total_applets=$(wc -l < "$OUTPUT_DIR/busybox-applets.txt" | tr -d ' ')
     log_info "Creating symlinks for $total_applets applets..."
     
+    # Use a more efficient approach - read all at once and create symlinks
     while IFS= read -r applet; do
-        # Skip busybox itself
+        # Skip busybox itself and empty lines
+        [ -z "$applet" ] && continue
         [ "$applet" = "busybox" ] && continue
         
         # Create symlink
-        ln -sf busybox "$OUTPUT_DIR/bin/$applet" 2>/dev/null || true
-        ((symlink_count++))
+        if ln -sf busybox "$OUTPUT_DIR/bin/$applet" 2>/dev/null; then
+            ((symlink_count++))
+        fi
+        
+        # Progress indicator every 100 applets
+        if [ $((symlink_count % 100)) -eq 0 ] && [ $symlink_count -gt 0 ]; then
+            log_info "Progress: $symlink_count/$total_applets symlinks created..."
+        fi
     done < "$OUTPUT_DIR/busybox-applets.txt"
     
     log_success "Created $symlink_count symlinks for BusyBox applets"
