@@ -135,13 +135,22 @@ run_test() {
     TESTS_RUN=$((TESTS_RUN + 1))
     log_test "Running: $test_name"
     
-    if eval "$command" > /dev/null 2>&1; then
+    # Capture output and error
+    local output
+    local exit_code
+    output=$(eval "$command" 2>&1)
+    exit_code=$?
+    
+    if [[ $exit_code -eq 0 ]]; then
         TESTS_PASSED=$((TESTS_PASSED + 1))
         echo "  ✅ PASSED"
         return 0
     else
         TESTS_FAILED=$((TESTS_FAILED + 1))
-        echo "  ❌ FAILED"
+        echo "  ❌ FAILED (exit code: $exit_code)"
+        if [[ -n "$output" ]]; then
+            echo "     Output: ${output:0:200}"  # Show first 200 chars
+        fi
         return 1
     fi
 }
@@ -158,21 +167,53 @@ test_bootstrap() {
     
     log_info "Using PRoot: $PROOT_BIN"
     
+    # Determine if we need QEMU for cross-architecture testing
+    local host_arch=$(uname -m)
+    local qemu_arg=""
+    
+    # Map target architecture to QEMU binary
+    case "$TARGET_ARCH" in
+        arm64-v8a)
+            if [[ "$host_arch" != "aarch64" ]]; then
+                qemu_arg="-q /usr/bin/qemu-aarch64-static"
+                log_info "Cross-arch testing: using qemu-aarch64-static"
+            fi
+            ;;
+        armeabi-v7a)
+            if [[ "$host_arch" != "armv7l" ]]; then
+                qemu_arg="-q /usr/bin/qemu-arm-static"
+                log_info "Cross-arch testing: using qemu-arm-static"
+            fi
+            ;;
+        x86_64)
+            if [[ "$host_arch" != "x86_64" ]]; then
+                qemu_arg="-q /usr/bin/qemu-x86_64-static"
+                log_info "Cross-arch testing: using qemu-x86_64-static"
+            fi
+            ;;
+        x86)
+            if [[ "$host_arch" != "i686" ]] && [[ "$host_arch" != "i386" ]]; then
+                qemu_arg="-q /usr/bin/qemu-i386-static"
+                log_info "Cross-arch testing: using qemu-i386-static"
+            fi
+            ;;
+    esac
+    
     # Basic tests
     run_test "Shell execution" \
-        "$PROOT_BIN -r '$BOOTSTRAP_DIR' /usr/bin/sh -c 'echo test'"
+        "$PROOT_BIN $qemu_arg -r '$BOOTSTRAP_DIR' /usr/bin/sh -c 'echo test'"
     
     run_test "Bash version" \
-        "$PROOT_BIN -r '$BOOTSTRAP_DIR' /usr/bin/bash --version"
+        "$PROOT_BIN $qemu_arg -r '$BOOTSTRAP_DIR' /usr/bin/bash --version"
     
     run_test "List binaries" \
-        "$PROOT_BIN -r '$BOOTSTRAP_DIR' /usr/bin/ls /usr/bin"
+        "$PROOT_BIN $qemu_arg -r '$BOOTSTRAP_DIR' /usr/bin/ls /usr/bin"
     
     run_test "File operations" \
-        "$PROOT_BIN -r '$BOOTSTRAP_DIR' /usr/bin/sh -c 'echo test > /tmp/test.txt && cat /tmp/test.txt'"
+        "$PROOT_BIN $qemu_arg -r '$BOOTSTRAP_DIR' /usr/bin/sh -c 'echo test > /tmp/test.txt && cat /tmp/test.txt'"
     
     run_test "Environment variables" \
-        "$PROOT_BIN -r '$BOOTSTRAP_DIR' /usr/bin/sh -c 'export TEST=value && echo \$TEST'"
+        "$PROOT_BIN $qemu_arg -r '$BOOTSTRAP_DIR' /usr/bin/sh -c 'export TEST=value && echo \$TEST'"
     
     return 0
 }
