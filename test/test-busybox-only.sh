@@ -109,6 +109,20 @@ docker run --rm \
     export BUILD_DIR=/workspace/build
     export OUTPUT_DIR=/workspace/build/static-${TARGET_ARCH}
     export SOURCE_DIR=/workspace/.cache/sources
+    export CONFIG_FILE=/workspace/build-config.json
+    
+    # Set architecture-specific flags
+    if [ "$TARGET_ARCH" = "x86" ]; then
+      export ARCH_CFLAGS="-march=i686 -m32"
+    elif [ "$TARGET_ARCH" = "x86_64" ]; then
+      export ARCH_CFLAGS="-march=x86-64"
+    elif [ "$TARGET_ARCH" = "arm64-v8a" ]; then
+      export CROSS_COMPILE="aarch64-linux-gnu-"
+      export ARCH_CFLAGS="-march=armv8-a"
+    elif [ "$TARGET_ARCH" = "armeabi-v7a" ]; then
+      export CROSS_COMPILE="arm-linux-gnueabihf-"
+      export ARCH_CFLAGS="-march=armv7-a -mfloat-abi=hard -mfpu=neon"
+    fi
     
     bash scripts/build-busybox-static.sh
   '
