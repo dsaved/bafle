@@ -464,7 +464,7 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update bootstrap manifest to v$VERSION"
-            git push origin HEAD:main
+            git push origin HEAD:proot-compatible
             echo "✅ Manifest committed and pushed"
           fi
       
