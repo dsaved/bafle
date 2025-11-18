@@ -1,6 +1,6 @@
 {
-  "version": "1.0.2",
-  "releaseDate": "2025-11-14",
+  "version": "2.0.0",
+  "releaseDate": "2025-11-18",
   "bootstraps": {
     "android-native": {
       "arm64-v8a": {
@@ -38,6 +38,17 @@
         "linker": "/system/bin/linker",
         "prootCompatible": false,
         "min_android_version": 21
+      }
+    },
+    "static": {
+      "x86_64": {
+        "url": "https://github.com/dsaved/bafle/releases/download/v2.0.0/bootstrap-static-x86_64-2.0.0.tar.xz",
+        "sha256": "sha256:adce51a6be19382b2c62ed809e8e68d45bc62e9dfcf6fe830e5cfc7f5030b47f",
+        "size": 2093840,
+        "buildMode": "static",
+        "prootCompatible": true,
+        "libc": "musl",
+        "testReport": "https://github.com/dsaved/bafle/releases/download/v2.0.0/test-report-static-x86_64.json"
       }
     }
   },
