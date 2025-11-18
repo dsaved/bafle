@@ -445,7 +445,9 @@ jobs:
           echo "✅ Manifest validated"
           echo ""
           echo "Manifest summary:"
-          jq '.version, .releaseDate, .bootstraps | keys' bootstrap-manifest.json
+          echo "  Version: $(jq -r '.version' bootstrap-manifest.json)"
+          echo "  Release Date: $(jq -r '.releaseDate' bootstrap-manifest.json)"
+          echo "  Build Modes: $(jq -r '.bootstraps | keys | join(", ")' bootstrap-manifest.json)"
       
       - name: Commit and push manifest
         run: |
