@@ -4,14 +4,29 @@ name: Mirror bootstrap
 # very slow from a phone (about 15 KB/s was measured), and falls back to the same file
 # at https://mcs.dsaved.com/bootstrap/<tag>/<file> (BootstrapDownloader.mirrorsFor in
 # the app), a copy kept in the R2 bucket that serves the app's updates. Run this once
-# for each release the app can select, with its tag, after the release is made (the
-# release is created with the workflow's own token, which does not start other
-# workflows, so this is not triggered by it).
+# for each release the app can select.
+#
+# build-bootstrap.yml calls this when it has made a release, so a new release is
+# mirrored with no one asking. (A release made with a workflow's own token cannot
+# start another workflow by being published, which is why it is called from the build
+# rather than triggered by the release.) It can also be run by hand with a tag, for a
+# release made before this existed.
 #
 # A file already in the bucket is left as it is: a release's assets do not change.
 # Needs the CLOUDFLARE_ACCESS_KEY_ID and CLOUDFLARE_SECRET_ACCESS_KEY secrets.
 
 on:
+  workflow_call:
+    inputs:
+      tag:
+        description: 'Release tag to copy (e.g. v1.0.2)'
+        required: true
+        type: string
+    secrets:
+      CLOUDFLARE_ACCESS_KEY_ID:
+        required: true
+      CLOUDFLARE_SECRET_ACCESS_KEY:
+        required: true
   workflow_dispatch:
     inputs:
       tag:

@@ -362,7 +362,8 @@ https://github.com/termux/termux-packages
 ## Mirror of the bootstrap archives
 
 The app downloads a bootstrap from a release's assets here; GitHub's release CDN can be very slow from a phone,
-so the app falls back to a copy at `https://mcs.dsaved.com/bootstrap/<tag>/<file>` (Cloudflare R2). After making a
-release, run the *Mirror bootstrap* workflow (`.github/workflows/mirror-bootstrap.yml`) with its tag: it copies the
-`bootstrap-*.tar.*` assets to the bucket, leaves any file already there, and checks each is served whole. It needs
-the `CLOUDFLARE_ACCESS_KEY_ID` and `CLOUDFLARE_SECRET_ACCESS_KEY` repository secrets.
+so the app falls back to a copy at `https://mcs.dsaved.com/bootstrap/<tag>/<file>` (Cloudflare R2). The build
+workflow calls `.github/workflows/mirror-bootstrap.yml` once it has made a release: it copies the `bootstrap-*.tar.*`
+assets to the bucket, leaves any file already there, and checks each is served whole. It can also be run by hand with
+a tag (*Actions → Mirror bootstrap*), for a release made before it existed. It needs the `CLOUDFLARE_ACCESS_KEY_ID`
+and `CLOUDFLARE_SECRET_ACCESS_KEY` repository secrets.
