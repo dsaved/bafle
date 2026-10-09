@@ -1,0 +1,70 @@
+name: Mirror bootstrap
+
+# The MCS app downloads its bootstrap from this repo's GitHub releases, which can be
+# very slow from a phone (about 15 KB/s was measured), and falls back to the same file
+# at https://mcs.dsaved.com/bootstrap/<tag>/<file> (BootstrapDownloader.mirrorsFor in
+# the app), a copy kept in the R2 bucket that serves the app's updates. Run this once
+# for each release the app can select, with its tag, after the release is made (the
+# release is created with the workflow's own token, which does not start other
+# workflows, so this is not triggered by it).
+#
+# A file already in the bucket is left as it is: a release's assets do not change.
+# Needs the CLOUDFLARE_ACCESS_KEY_ID and CLOUDFLARE_SECRET_ACCESS_KEY secrets.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to copy (e.g. v1.0.2)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download the release's archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          mkdir out
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern 'bootstrap-*.tar.*' --dir out
+          ls -l out
+          [ "$(ls out | wc -l)" -gt 0 ] || { echo "error: $TAG has no bootstrap archives" >&2; exit 1; }
+
+      - name: Copy them to R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          ENDPOINT: https://f6e2427c4859fc053267b1b4e49c95e0.r2.cloudflarestorage.com
+          TAG: ${{ inputs.tag }}
+        run: |
+          for f in out/*; do
+            name="$(basename "$f")"
+            key="bootstrap/$TAG/$name"
+            if aws s3 ls "s3://mcs/$key" --endpoint-url "$ENDPOINT" >/dev/null 2>&1; then
+              echo "$key is already there; keeping it"
+              continue
+            fi
+            aws s3 cp "$f" "s3://mcs/$key" --endpoint-url "$ENDPOINT" --no-progress \
+              --cache-control "public, max-age=31536000, immutable"
+            echo "uploaded $key"
+          done
+
+      - name: Check what the app will ask for
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          for f in out/*; do
+            name="$(basename "$f")"
+            url="https://mcs.dsaved.com/bootstrap/$TAG/$name"
+            want="$(stat -c %s "$f")"
+            got="$(curl -sI "$url" | tr -d '\r' | awk 'tolower($1)=="content-length:"{print $2}' | tail -1)"
+            echo "$url  expected $want, served $got"
+            [ "$want" = "$got" ] || { echo "error: $url is not served whole" >&2; exit 1; }
+          done
