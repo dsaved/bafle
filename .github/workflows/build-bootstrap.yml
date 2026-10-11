@@ -526,3 +526,16 @@ jobs:
           echo "Status: ${{ job.status }}"
           echo "Release: ${{ steps.create_release.outputs.release_url }}"
           echo "================================================"
+
+  # Keep a copy of the archives where a phone can fetch them fast: the app falls back
+  # to it when GitHub's release CDN is slow or down (see mirror-bootstrap.yml).
+  mirror:
+    needs: deploy
+    permissions:
+      contents: read
+    uses: ./.github/workflows/mirror-bootstrap.yml
+    with:
+      tag: v${{ inputs.version }}
+    secrets:
+      CLOUDFLARE_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_ACCESS_KEY_ID }}
+      CLOUDFLARE_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_SECRET_ACCESS_KEY }}
