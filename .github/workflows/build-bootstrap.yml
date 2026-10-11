@@ -10,7 +10,7 @@ on:
       build_modes:
         description: 'Build modes to create (comma-separated: static,linux-native,android-native)'
         required: false
-        default: 'static'
+        default: 'android-native'
         type: string
       architectures:
         description: 'Architectures to build (comma-separated: arm64-v8a,armeabi-v7a,x86_64,x86)'

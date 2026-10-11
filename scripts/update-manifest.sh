@@ -10,7 +10,7 @@ set -o pipefail  # Exit on pipe failure
 #   version: Version number (e.g., 1.0.0)
 #   repo_name: GitHub repository in format owner/repo (e.g., dsaved/bafle)
 #   checksums_json: JSON string with checksum and size data for each architecture
-#   build_mode: Build mode (static, linux-native, or android-native) - optional, defaults to static
+#   build_mode: Build mode (static, linux-native, or android-native) - optional, defaults to android-native
 #   test_report_base_url: Base URL for test reports - optional
 #   compression_format: xz, zstd, or gzip - optional, defaults to xz (must match the
 #     compression package-archives.sh actually used, or the URL will 404)
@@ -37,7 +37,7 @@ log_error() {
 VERSION="${1:-}"
 REPO_NAME="${2:-}"
 CHECKSUMS_JSON="${3:-}"
-BUILD_MODE="${4:-static}"
+BUILD_MODE="${4:-android-native}"
 TEST_REPORT_BASE_URL="${5:-}"
 COMPRESSION_FORMAT="${6:-xz}"
 MANIFEST_FILE="bootstrap-manifest.json"
