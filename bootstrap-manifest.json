@@ -39,44 +39,6 @@
         "prootCompatible": false,
         "min_android_version": 21
       }
-    },
-    "static": {
-      "x86_64": {
-        "url": "https://github.com/dsaved/bafle/releases/download/v2.0.0/bootstrap-static-x86_64-2.0.0.tar.xz",
-        "sha256": "sha256:adce51a6be19382b2c62ed809e8e68d45bc62e9dfcf6fe830e5cfc7f5030b47f",
-        "size": 2093840,
-        "buildMode": "static",
-        "prootCompatible": true,
-        "libc": "musl",
-        "testReport": "https://github.com/dsaved/bafle/releases/download/v2.0.0/test-report-static-x86_64.json"
-      },
-      "arm64-v8a": {
-        "url": "https://github.com/dsaved/bafle/releases/download/v2.0.0/bootstrap-static-arm64-v8a-2.0.0.tar.xz",
-        "sha256": "sha256:2e28cdc2e0238168864a20f21c310fa7cf46737808a33d095ee6e972fe803afc",
-        "size": 2254888,
-        "buildMode": "static",
-        "prootCompatible": true,
-        "libc": "musl",
-        "testReport": "https://github.com/dsaved/bafle/releases/download/v2.0.0/test-report-static-arm64-v8a.json"
-      },
-      "armeabi-v7a": {
-        "url": "https://github.com/dsaved/bafle/releases/download/v2.0.0/bootstrap-static-armeabi-v7a-2.0.0.tar.xz",
-        "sha256": "sha256:b0b681576c492d1af66eb560b77faed45fec8f251edbddd765c3dc3c0e99c7de",
-        "size": 2228264,
-        "buildMode": "static",
-        "prootCompatible": true,
-        "libc": "musl",
-        "testReport": "https://github.com/dsaved/bafle/releases/download/v2.0.0/test-report-static-armeabi-v7a.json"
-      },
-      "x86": {
-        "url": "https://github.com/dsaved/bafle/releases/download/v2.0.0/bootstrap-static-x86-2.0.0.tar.xz",
-        "sha256": "sha256:97dc82f86fe421c913c97e97548b2a3220bee64521354a0db4b17e99bfe34c4b",
-        "size": 2448716,
-        "buildMode": "static",
-        "prootCompatible": true,
-        "libc": "musl",
-        "testReport": "https://github.com/dsaved/bafle/releases/download/v2.0.0/test-report-static-x86.json"
-      }
     }
   },
   "architectures": {
@@ -105,5 +67,5 @@
       "min_android_version": 21
     }
   },
-  "last_updated": "2026-09-24"
+  "last_updated": "2026-10-11T19:03:07Z"
 }
